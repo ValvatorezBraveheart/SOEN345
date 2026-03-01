@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "715473079362",
+    "firebase_url": "https://soen345project-default-rtdb.firebaseio.com",
+    "project_id": "soen345project",
+    "storage_bucket": "soen345project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715473079362:android:46bf1845edc9f68d1bf1db",
+        "android_client_info": {
+          "package_name": "com.example.soen345"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8s-ebe85A-gnctpnuDPEoLdGMnelD7gY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715473079362:android:1b8c289415c4569d1bf1db",
+        "android_client_info": {
+          "package_name": "com.junit4.soen345"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8s-ebe85A-gnctpnuDPEoLdGMnelD7gY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

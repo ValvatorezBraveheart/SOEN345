@@ -1,0 +1,36 @@
+/build
+# Android Studio / IntelliJ
+.idea/
+*.iml
+.gradle/
+local.properties
+.DS_Store
+captures
+.externalNativeBuild
+.cxx
+cmake-build-debug/
+cmake-build-release/
+
+# Gradle / Build
+build/
+app/build/
+*.apk
+*.aar
+*.jks
+*.keystore
+
+# Firebase config (Optional but recommended)
+# Note: google-services.json contains public API keys. 
+# Many developers keep it in Git for CI/CD, but if you want 
+# absolute privacy for your project IDs, uncomment the line below:
+# app/google-services.json
+
+# Navigation / Secrets
+**/google-services.json.ids
+**/google-services.json.properties
+
+# Logs
+*.log
+
+# OS specific
+Thumbs.db
