@@ -1,5 +1,6 @@
 package com.example.soen345;
 
+import com.google.firebase.BuildConfig;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.CollectionReference;
 
@@ -9,6 +10,15 @@ public class DatabaseService {
     // References to your Collections
     private final CollectionReference usersRef = db.collection("users");
     private final CollectionReference eventsRef = db.collection("events");
+
+    public DatabaseService() {
+        if (BuildConfig.DEBUG) {
+            try {
+                db.useEmulator("10.0.2.2", 8080);
+            } catch (IllegalStateException e) {
+            }
+        }
+    }
 
     // Method to save a User
     public void saveUser(User user) {
