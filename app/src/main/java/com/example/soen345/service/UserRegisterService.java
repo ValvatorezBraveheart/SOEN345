@@ -5,20 +5,43 @@ import android.util.Log;
 import com.example.soen345.User;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserRegisterService {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore db;
+    private final CollectionReference usersRef;
 
-    private void registerUser(User newUser){
+    public UserRegisterService(FirebaseFirestore firestore) {
+        this.db = firestore;
+        this.usersRef = db.collection("users");
+    }
+
+    public void registerUser(User newUser, UserRegisterCallback callback){
         if (!validateInputs(newUser)){
             Log.i("UserRegister", "Invalid inputs");
+            callback.onFailure(new IllegalArgumentException("Invalid input"));
             return;
         }
         validateExistingAccount(newUser, (isValid, errorMessage) -> {
-            if (!isValid){
-                db.collection("users").document(newUser.userId).set(newUser);
+            if (isValid){
+                usersRef.document(newUser.userId).set(newUser);
+                callback.onSuccess();
+                db.collection("users").get().addOnSuccessListener(snapshot -> {
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        Log.i("FirestoreDebug", "DocId: " + doc.getId() + ", Username: " + doc.getString("username"));
+                    }
+                });
+            } else {
+                Log.i("UserRegister", "Error");
+                callback.onFailure(new IllegalArgumentException(errorMessage));
+                db.collection("users").get().addOnSuccessListener(snapshot -> {
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        Log.i("FirestoreDebug", "DocId: " + doc.getId() + ", Username: " + doc.getString("username"));
+                    }
+                });
             }
         });
     }
@@ -68,7 +91,7 @@ public class UserRegisterService {
                     QuerySnapshot emailResult = (QuerySnapshot) results.get(1);
                     QuerySnapshot phoneResult = (QuerySnapshot) results.get(2);
 
-                    if (!usernameResult.isEmpty()) {
+                    if (usernameResult != null && !usernameResult.isEmpty()) {
                         callback.onResult(false, "Username already taken");
                     } else if (emailResult != null && !emailResult.isEmpty()) {
                         callback.onResult(false, "Email already taken");
@@ -80,7 +103,7 @@ public class UserRegisterService {
                 })
                 .addOnFailureListener(e -> callback.onResult(false, "Failed to validate: " + e.getMessage()));
     }
-    interface UserRegisterCallback{
+    public interface UserRegisterCallback{
         void onSuccess();
         void onFailure(Exception e);
     }
