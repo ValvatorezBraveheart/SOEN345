@@ -1,19 +1,25 @@
 package com.example.soen345.service;
 
 import com.example.soen345.User;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserLogInService {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public void execute(String username, String password, UserLogInCallback callback){
-        db.collection("users")
+    private FirebaseFirestore db;
+    private final CollectionReference usersRef;
+    public UserLogInService(FirebaseFirestore firestore){
+        this.db = firestore;
+        this.usersRef = db.collection("users");
+    }
+
+    public void loginUser(String username, String password, UserLogInCallback callback){
+        usersRef
                 .whereEqualTo("username", username)
                 .whereEqualTo("password", password)
                 .get()
                 .addOnSuccessListener(query -> {
                     if (query.isEmpty()) {
-                        callback.onFailure(new Exception("Invalid username or password"));
+                        callback.onFailure(new AuthenticationException("Invalid username or password"));
                         return;
                     }
                     User user = query.getDocuments().get(0).toObject(User.class);
