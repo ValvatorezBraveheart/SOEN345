@@ -34,10 +34,8 @@ To ensure high software quality and maintain a stable `main` branch, this projec
 ## Documentation
 The complete project report, including requirements analysis, system design, test plans, and results, is hosted in the project Wiki.
 
-* **[Project Index / Home](Wiki-Link-Here)**
-* **[Requirements Analysis](Wiki-Link-Here)**
-* **[System Architecture & Design](Wiki-Link-Here)**
-* **[Testing Strategy & Results](Wiki-Link-Here)**
+**[Project Index / Home](https://github.com/ValvatorezBraveheart/SOEN345/wiki)**
+
 
 ## Installation & Setup
 1. Clone the repository: `git clone https://github.com/YourRepo/SOEN345.git`
