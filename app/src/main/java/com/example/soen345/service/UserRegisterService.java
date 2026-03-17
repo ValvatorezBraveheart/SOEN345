@@ -29,26 +29,17 @@ public class UserRegisterService {
             if (isValid){
                 usersRef.document(newUser.userId).set(newUser);
                 callback.onSuccess();
-                db.collection("users").get().addOnSuccessListener(snapshot -> {
-                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                        Log.i("FirestoreDebug", "DocId: " + doc.getId() + ", Username: " + doc.getString("username"));
-                    }
-                });
             } else {
                 Log.i("UserRegister", "Error");
                 callback.onFailure(new IllegalArgumentException(errorMessage));
-                db.collection("users").get().addOnSuccessListener(snapshot -> {
-                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                        Log.i("FirestoreDebug", "DocId: " + doc.getId() + ", Username: " + doc.getString("username"));
-                    }
-                });
             }
         });
     }
 
     private boolean validateInputs(User newUser){
         // Either email or phone number exist
-        if (newUser.email == null && newUser.phone == null){
+        if ((newUser.email == null || newUser.email.isEmpty()) &&
+                (newUser.phone == null || newUser.phone.isEmpty())){
             Log.i("UserRegister", "Missing email or phone number");
             return false;
         }
@@ -91,11 +82,11 @@ public class UserRegisterService {
                     QuerySnapshot emailResult = (QuerySnapshot) results.get(1);
                     QuerySnapshot phoneResult = (QuerySnapshot) results.get(2);
 
-                    if (usernameResult != null && !usernameResult.isEmpty()) {
+                    if (!usernameResult.isEmpty()) {
                         callback.onResult(false, "Username already taken");
-                    } else if (emailResult != null && !emailResult.isEmpty()) {
+                    } else if (!emailResult.isEmpty()) {
                         callback.onResult(false, "Email already taken");
-                    } else if (phoneResult != null && !phoneResult.isEmpty()) {
+                    } else if (!phoneResult.isEmpty()) {
                         callback.onResult(false, "Phone already taken");
                     } else {
                         callback.onResult(true, null);
