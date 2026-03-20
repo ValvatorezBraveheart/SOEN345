@@ -3,11 +3,8 @@ package com.example.soen345.logic;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -22,7 +19,6 @@ import com.example.soen345.User;
 import com.example.soen345.service.UserRegisterService;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -66,27 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
             finish();
         });
 
-        signupButton.setOnClickListener(v -> {
-            String fullNameText = fullName.getText().toString().trim();
-            String emailText = email.getText().toString().trim();
-            String phoneText = phone.getText().toString().trim();
-            String passwordText = password.getText().toString().trim();
-            String roleText = roleAutoComplete.getText().toString().trim();
-
-            if (TextUtils.isEmpty(fullNameText) ||
-                    TextUtils.isEmpty(emailText) ||
-                    TextUtils.isEmpty(phoneText) ||
-                    TextUtils.isEmpty(passwordText) ||
-                    TextUtils.isEmpty(roleText)) {
-
-                Toast.makeText(RegisterActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(RegisterActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-
-        Button btnSignUp = findViewById(R.id.signupButton);
-        btnSignUp.setOnClickListener(view -> {
-            onClickSignUp();
-        });
+        signupButton.setOnClickListener(v -> onClickSignUp());
     }
 
     private void onClickSignUp(){
@@ -103,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         String password = inputPassword.getText().toString();
         String role = null;
         RadioGroup group = findViewById(R.id.radioGroupRole);
+
         int selectedId = group.getCheckedRadioButtonId();
         RadioButton selected = findViewById(selectedId);
         if (selected == findViewById(R.id.radioOptionCustomer)){
