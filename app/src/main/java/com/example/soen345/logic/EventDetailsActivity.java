@@ -24,8 +24,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private TextView eventDateFull;
     private TextView eventTime;
     private TextView eventLocation;
-    private TextView eventPrice;
-    private TextView ticketAvailability;
+
     private TextView eventDescription;
 
     private MaterialButton reserveButton;
@@ -52,8 +51,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         eventDateFull = findViewById(R.id.eventDateFull);
         eventTime = findViewById(R.id.eventTime);
         eventLocation = findViewById(R.id.eventLocation);
-        eventPrice = findViewById(R.id.eventPrice);
-        ticketAvailability = findViewById(R.id.ticketAvailability);
         eventDescription = findViewById(R.id.eventDescription);
 
         reserveButton = findViewById(R.id.reserveButton);
@@ -70,8 +67,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         String dateFull = intent.getStringExtra("event_date_full");
         String time = intent.getStringExtra("event_time");
         String location = intent.getStringExtra("event_location");
-        String price = intent.getStringExtra("event_price");
-        String availability = intent.getStringExtra("event_availability");
         String description = intent.getStringExtra("event_description");
 
         if (day == null) day = "24";
@@ -82,8 +77,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         if (dateFull == null) dateFull = "24 Sept 2026";
         if (time == null) time = "7:00 PM";
         if (location == null) location = "Bell Centre, Montreal";
-        if (price == null) price = "$45.00";
-        if (availability == null) availability = "Available";
         if (description == null) {
             description = "Enjoy an unforgettable evening filled with live performances, vibrant stage production, and an energetic atmosphere in the heart of Montreal. Join music lovers from across the city for a night of entertainment, food, and celebration.";
         }
@@ -96,8 +89,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         eventDateFull.setText(dateFull);
         eventTime.setText(time);
         eventLocation.setText(location);
-        eventPrice.setText(price);
-        ticketAvailability.setText(availability);
         eventDescription.setText(description);
     }
 
@@ -122,7 +113,6 @@ public class EventDetailsActivity extends AppCompatActivity {
             intent.putExtra("event_title", eventTitle.getText().toString());
             intent.putExtra("event_location", eventLocation.getText().toString());
             intent.putExtra("event_time", eventTime.getText().toString());
-            intent.putExtra("event_price", eventPrice.getText().toString());
             startActivity(intent);
         });
     }

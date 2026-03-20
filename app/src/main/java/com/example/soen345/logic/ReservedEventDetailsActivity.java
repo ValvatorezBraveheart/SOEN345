@@ -25,9 +25,7 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
     private TextView eventLocation;
     private TextView eventCategory;
 
-    private TextView reservationId;
-    private TextView seatInfo;
-    private TextView amountPaid;
+
 
     private MaterialButton viewEventButton;
     private MaterialButton cancelReservationButton;
@@ -55,9 +53,7 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
         eventLocation = findViewById(R.id.eventLocation);
         eventCategory = findViewById(R.id.eventCategory);
 
-        reservationId = findViewById(R.id.reservationId);
-        seatInfo = findViewById(R.id.seatInfo);
-        amountPaid = findViewById(R.id.amountPaid);
+
 
         viewEventButton = findViewById(R.id.viewEventButton);
         cancelReservationButton = findViewById(R.id.cancelReservationButton);
@@ -75,9 +71,7 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
         String time = intent.getStringExtra("event_time");
         String location = intent.getStringExtra("event_location");
         String category = intent.getStringExtra("event_category");
-        String reservation = intent.getStringExtra("reservation_id");
-        String seat = intent.getStringExtra("seat_info");
-        String paid = intent.getStringExtra("amount_paid");
+
 
         if (day == null) day = "24";
         if (month == null) month = "SEP";
@@ -88,9 +82,7 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
         if (time == null) time = "7:00 PM";
         if (location == null) location = "Bell Centre, Montreal";
         if (category == null) category = "Concerts";
-        if (reservation == null) reservation = "VELX-2026-00124";
-        if (seat == null) seat = "Section A • Seat 14";
-        if (paid == null) paid = "$45.00";
+
 
         eventDateDay.setText(day);
         eventDateMonth.setText(month);
@@ -101,9 +93,7 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
         eventTime.setText(time);
         eventLocation.setText(location);
         eventCategory.setText(category);
-        reservationId.setText(reservation);
-        seatInfo.setText(seat);
-        amountPaid.setText(paid);
+
     }
 
     private void setupActions() {
@@ -119,7 +109,6 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
             intent.putExtra("event_date_full", eventDateFull.getText().toString());
             intent.putExtra("event_time", eventTime.getText().toString());
             intent.putExtra("event_location", eventLocation.getText().toString());
-            intent.putExtra("event_price", amountPaid.getText().toString());
             intent.putExtra("event_availability", "Reserved");
             intent.putExtra("event_description", "This is your reserved event. More event details can be shown here later.");
             startActivity(intent);

@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:translationX="80dp"
-        android:translationY="-40dp"/>
+        android:translationY="-40dp" />
 
     <View
         android:layout_width="250dp"
@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:translationX="-70dp"
-        android:translationY="90dp"/>
+        android:translationY="90dp" />
 
     <ScrollView
         android:id="@+id/searchScroll"
@@ -56,7 +56,7 @@
                 android:text="Search Events"
                 android:textColor="#4A5AE8"
                 android:textSize="30sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                 android:layout_marginTop="4dp"
                 android:text="Find events by keyword, date, or location"
                 android:textColor="#888888"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:id="@+id/searchBarContainer"
@@ -82,7 +82,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_search_bold"
-                    android:contentDescription="Search"/>
+                    android:contentDescription="Search" />
 
                 <EditText
                     android:id="@+id/searchEditText"
@@ -95,9 +95,7 @@
                     android:inputType="text"
                     android:textColor="#1E1E1E"
                     android:textColorHint="#999999"
-                    android:textSize="15sp"/>
-
-
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <TextView
@@ -107,7 +105,7 @@
                 android:text="Filters"
                 android:textColor="#101A63"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,7 +116,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/dateFilterCard"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="76dp"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="6dp"
@@ -128,16 +126,17 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="14dp">
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp">
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_calendar_filter"
-                            android:contentDescription="Date"/>
+                            android:contentDescription="Date" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -151,7 +150,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Date"
                                 android:textColor="#777777"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/dateFilterText"
@@ -161,15 +160,15 @@
                                 android:text="Any day"
                                 android:textColor="#1E1E1E"
                                 android:textSize="14sp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/locationFilterCard"
+                    android:id="@+id/locationInputCard"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="76dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="6dp"
@@ -179,22 +178,23 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="14dp">
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp">
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_location_filter"
-                            android:contentDescription="Location"/>
+                            android:contentDescription="Location" />
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
                             android:layout_weight="1"
+                            android:layout_marginStart="10dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -202,18 +202,23 @@
                                 android:layout_height="wrap_content"
                                 android:text="Location"
                                 android:textColor="#777777"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
 
-                            <TextView
-                                android:id="@+id/locationFilterText"
-                                android:layout_width="wrap_content"
+                            <EditText
+                                android:id="@+id/locationEditText"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Montreal"
+                                android:background="@android:color/transparent"
+                                android:hint="Enter location"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:padding="0dp"
                                 android:textColor="#1E1E1E"
-                                android:textSize="14sp"
-                                android:textStyle="bold"/>
+                                android:textColorHint="#999999"
+                                android:textSize="14sp" />
                         </LinearLayout>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
@@ -241,8 +246,8 @@
                         android:paddingBottom="10dp"
                         android:text="All Events"
                         android:textColor="#FFFFFF"
-                        android:textStyle="bold"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/chipConcertsSearch"
@@ -256,7 +261,7 @@
                         android:paddingBottom="10dp"
                         android:text="Concerts"
                         android:textColor="#777777"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/chipSportsSearch"
@@ -270,7 +275,7 @@
                         android:paddingBottom="10dp"
                         android:text="Sports"
                         android:textColor="#777777"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/chipTheaterSearch"
@@ -283,7 +288,7 @@
                         android:paddingBottom="10dp"
                         android:text="Theater"
                         android:textColor="#777777"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
                 </LinearLayout>
             </HorizontalScrollView>
 
@@ -300,12 +305,12 @@
                     android:text="Results"
                     android:textColor="#101A63"
                     android:textSize="18sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/resultsCount"
@@ -313,7 +318,7 @@
                     android:layout_height="wrap_content"
                     android:text="12 found"
                     android:textColor="#888888"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
@@ -344,7 +349,7 @@
                             android:text="24"
                             android:textColor="#FFFFFF"
                             android:textSize="22sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -352,7 +357,7 @@
                             android:text="SEP"
                             android:textColor="#EEF1FF"
                             android:textSize="12sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -368,7 +373,7 @@
                             android:text="Summer Music Festival"
                             android:textColor="#1E1E1E"
                             android:textSize="18sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -376,7 +381,7 @@
                             android:layout_marginTop="4dp"
                             android:text="Bell Centre, Montreal"
                             android:textColor="#888888"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -385,7 +390,7 @@
                             android:text="Concerts"
                             android:textColor="#4A5AE8"
                             android:textSize="13sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -419,7 +424,7 @@
                             android:text="29"
                             android:textColor="#FFFFFF"
                             android:textSize="22sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -427,7 +432,7 @@
                             android:text="SEP"
                             android:textColor="#EEF1FF"
                             android:textSize="12sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -440,10 +445,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Spring Art Showcase"
+                            android:text="Fall Art Showcase"
                             android:textColor="#1E1E1E"
                             android:textSize="18sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -451,7 +456,7 @@
                             android:layout_marginTop="4dp"
                             android:text="Place des Arts, Montreal"
                             android:textColor="#888888"
-                            android:textSize="14sp"/>
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -460,7 +465,7 @@
                             android:text="Theater"
                             android:textColor="#4A5AE8"
                             android:textSize="13sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -500,7 +505,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_home_white"
-                    android:contentDescription="Home"/>
+                    android:contentDescription="Home" />
             </FrameLayout>
 
             <FrameLayout
@@ -515,7 +520,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_registered_events"
-                    android:contentDescription="Registered Events"/>
+                    android:contentDescription="Registered Events" />
             </FrameLayout>
 
             <FrameLayout
@@ -530,11 +535,10 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_profile"
-                    android:contentDescription="Profile"/>
+                    android:contentDescription="Profile" />
             </FrameLayout>
 
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

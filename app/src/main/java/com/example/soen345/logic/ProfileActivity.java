@@ -18,7 +18,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView navProfile;
 
     private CardView editProfileCard;
-    private CardView paymentMethodsCard;
+
     
     private CardView logoutCard;
 
@@ -38,7 +38,6 @@ public class ProfileActivity extends AppCompatActivity {
         navProfile = findViewById(R.id.navProfile);
 
         editProfileCard = findViewById(R.id.editProfileCard);
-        paymentMethodsCard = findViewById(R.id.paymentMethodsCard);
         logoutCard = findViewById(R.id.logoutCard);
     }
 
@@ -66,10 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        paymentMethodsCard.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, PaymentMethodsActivity.class);
-            startActivity(intent);
-        });
+
 
 
 

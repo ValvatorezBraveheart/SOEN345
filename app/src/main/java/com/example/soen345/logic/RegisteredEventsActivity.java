@@ -77,7 +77,6 @@ public class RegisteredEventsActivity extends AppCompatActivity {
             intent.putExtra("event_category", "Concerts");
             intent.putExtra("reservation_id", "VELX-2026-00124");
             intent.putExtra("seat_info", "Section A • Seat 14");
-            intent.putExtra("amount_paid", "$45.00");
             startActivity(intent);
         });
 
@@ -94,7 +93,6 @@ public class RegisteredEventsActivity extends AppCompatActivity {
             intent.putExtra("event_category", "Theater");
             intent.putExtra("reservation_id", "VELX-2026-00129");
             intent.putExtra("seat_info", "Section B • Seat 08");
-            intent.putExtra("amount_paid", "$35.00");
             startActivity(intent);
         });
 

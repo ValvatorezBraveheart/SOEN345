@@ -23,10 +23,6 @@ public class CancelReservationActivity extends AppCompatActivity {
     private TextView eventLocation;
     private TextView reservationId;
 
-    private TextView ticketPriceText;
-    private TextView cancellationFeeText;
-    private TextView refundAmountText;
-
     private AutoCompleteTextView cancelReasonAutoComplete;
 
     private MaterialButton confirmCancelButton;
@@ -52,9 +48,7 @@ public class CancelReservationActivity extends AppCompatActivity {
         eventLocation = findViewById(R.id.eventLocation);
         reservationId = findViewById(R.id.reservationId);
 
-        ticketPriceText = findViewById(R.id.ticketPriceText);
-        cancellationFeeText = findViewById(R.id.cancellationFeeText);
-        refundAmountText = findViewById(R.id.refundAmountText);
+
 
         cancelReasonAutoComplete = findViewById(R.id.cancelReasonAutoComplete);
 
@@ -70,27 +64,21 @@ public class CancelReservationActivity extends AppCompatActivity {
         String title = intent.getStringExtra("event_title");
         String location = intent.getStringExtra("event_location");
         String reservation = intent.getStringExtra("reservation_id");
-        String ticketPrice = intent.getStringExtra("ticket_price");
-        String cancellationFee = intent.getStringExtra("cancellation_fee");
-        String refundAmount = intent.getStringExtra("refund_amount");
+
 
         if (day == null) day = "24";
         if (month == null) month = "SEP";
         if (title == null) title = "Summer Music Festival";
         if (location == null) location = "Bell Centre, Montreal";
         if (reservation == null) reservation = "Reservation ID: VELX-2026-00124";
-        if (ticketPrice == null) ticketPrice = "$45.00";
-        if (cancellationFee == null) cancellationFee = "$5.00";
-        if (refundAmount == null) refundAmount = "$40.00";
+
 
         eventDateDay.setText(day);
         eventDateMonth.setText(month);
         eventTitle.setText(title);
         eventLocation.setText(location);
         reservationId.setText(reservation);
-        ticketPriceText.setText(ticketPrice);
-        cancellationFeeText.setText(cancellationFee);
-        refundAmountText.setText(refundAmount);
+
     }
 
     private void setupReasonDropdown() {

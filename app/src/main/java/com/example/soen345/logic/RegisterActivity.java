@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.soen345.R;
 
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText fullName;
