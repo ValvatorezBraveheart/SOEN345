@@ -7,8 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,19 +75,10 @@ public class RegisterActivity extends AppCompatActivity {
         String phone = inputPhone.getText().toString();
         String username = inputUsername.getText().toString();
         String password = inputPassword.getText().toString();
-        String role = null;
-        RadioGroup group = findViewById(R.id.radioGroupRole);
-
-        int selectedId = group.getCheckedRadioButtonId();
-        RadioButton selected = findViewById(selectedId);
-        if (selected == findViewById(R.id.radioOptionCustomer)){
-            role = "customer";
-        } else if (selected == findViewById(R.id.radioOptionAdmin)) {
-            role = "admin";
-        }
+        String roleText = roleAutoComplete.getText().toString().trim().toLowerCase();
         String userId = UUID.randomUUID().toString();
 
-        User user = new User(userId,username, password, fullname, email, phone, role);
+        User user = new User(userId,username, password, fullname, email, phone, roleText);
         UserRegisterService userRegisterService = new UserRegisterService(FirebaseFirestore.getInstance());
         userRegisterService.registerUser(user, new UserRegisterService.UserRegisterCallback() {
             @Override
