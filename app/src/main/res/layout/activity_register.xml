@@ -122,25 +122,7 @@
                 android:inputType="textPassword"
                 android:padding="12dp"
                 android:background="@drawable/input_field"/>
-            <RadioGroup
-                android:id="@+id/radioGroupRole"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radioOptionCustomer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Customer" />
-
-                <RadioButton
-                    android:id="@+id/radioOptionAdmin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Admin" />
-
-            </RadioGroup>
+            
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
