@@ -163,50 +163,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Attendee info -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Attendee Information"
-                android:textColor="#101A63"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-            <EditText
-                android:id="@+id/attendeeName"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="14dp"
-                android:hint="Full Name"
-                android:background="@drawable/input_field"
-                android:padding="14dp"
-                android:textColor="#1E1E1E"
-                android:textColorHint="#999999"/>
-
-            <EditText
-                android:id="@+id/attendeeEmail"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:background="@drawable/input_field"
-                android:padding="14dp"
-                android:textColor="#1E1E1E"
-                android:textColorHint="#999999"/>
-
-            <EditText
-                android:id="@+id/attendeePhone"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:hint="Phone Number"
-                android:inputType="phone"
-                android:background="@drawable/input_field"
-                android:padding="14dp"
-                android:textColor="#1E1E1E"
-                android:textColorHint="#999999"/>
 
             <!-- Ticket type -->
             <TextView

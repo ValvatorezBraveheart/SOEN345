@@ -17,10 +17,6 @@ public class ReserveEventActivity extends AppCompatActivity {
 
     private ImageView backButton;
 
-    private EditText attendeeName;
-    private EditText attendeeEmail;
-    private EditText attendeePhone;
-
     private AutoCompleteTextView ticketTypeAutoComplete;
 
     private MaterialButton confirmReservationButton;
@@ -39,9 +35,6 @@ public class ReserveEventActivity extends AppCompatActivity {
     private void initViews() {
         backButton = findViewById(R.id.backButton);
 
-        attendeeName = findViewById(R.id.attendeeName);
-        attendeeEmail = findViewById(R.id.attendeeEmail);
-        attendeePhone = findViewById(R.id.attendeePhone);
 
         ticketTypeAutoComplete = findViewById(R.id.ticketTypeAutoComplete);
 
@@ -72,12 +65,10 @@ public class ReserveEventActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(v -> finish());
 
         confirmReservationButton.setOnClickListener(v -> {
-            String name = attendeeName.getText().toString().trim();
-            String email = attendeeEmail.getText().toString().trim();
-            String phone = attendeePhone.getText().toString().trim();
+
             String ticketType = ticketTypeAutoComplete.getText().toString().trim();
 
-            if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || ticketType.isEmpty()) {
+            if (ticketType.isEmpty()) {
                 Toast.makeText(this, "Please fill in all reservation details", Toast.LENGTH_SHORT).show();
                 return;
             }
