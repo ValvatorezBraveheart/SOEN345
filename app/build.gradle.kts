@@ -1,8 +1,12 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.gms.google.services)
 }
-
+val localProperties = Properties()
+localProperties.load(FileInputStream(rootProject.file("local.properties")))
 android {
     namespace = "com.example.soen345"
     compileSdk {
@@ -15,7 +19,11 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField("String", "TWILIO_ACCOUNT_SID", "\"${localProperties["TWILIO_ACCOUNT_SID"]}\"")
+        buildConfigField("String", "TWILIO_AUTH_TOKEN", "\"${localProperties["TWILIO_AUTH_TOKEN"]}\"")
+        buildConfigField("String", "TWILIO_SRC_PHONE", "\"${localProperties["TWILIO_SRC_PHONE"]}\"")
+        buildConfigField("String", "GMAIL_EMAIL", "\"${localProperties["GMAIL_EMAIL"]}\"")
+        buildConfigField("String", "GMAIL_APP_PASSWORD", "\"${localProperties["GMAIL_APP_PASSWORD"]}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -41,6 +49,18 @@ android {
             isReturnDefaultValues = true
         }
     }
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md",
+                "META-INF/NOTICE.md")
+        }
+    }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -49,9 +69,12 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.database)
+    implementation (libs.twilio)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform(libs.firebase.bom))
+    implementation (libs.android.mail)
+    implementation(libs.android.activation)
 
     // Add the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
