@@ -122,26 +122,32 @@
                 android:inputType="textPassword"
                 android:padding="12dp"
                 android:background="@drawable/input_field"/>
-            <RadioGroup
-                android:id="@+id/radioGroupRole"
-                android:layout_width="wrap_content"
+            
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="12dp"
+                app:hintEnabled="false">
 
-                <RadioButton
-                    android:id="@+id/radioOptionCustomer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Customer" />
+                <AutoCompleteTextView
+                    android:id="@+id/roleAutoComplete"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/input_field"
+                    android:hint="Select Role"
+                    android:inputType="none"
+                    android:padding="12dp"
+                    android:textSize="18sp"
+                    android:textColorHint="#888888"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:popupBackground="#FFFFFF" />
 
-                <RadioButton
-                    android:id="@+id/radioOptionAdmin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Admin" />
-
-            </RadioGroup>
-
+            </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/signupButton"
                 android:layout_width="match_parent"
