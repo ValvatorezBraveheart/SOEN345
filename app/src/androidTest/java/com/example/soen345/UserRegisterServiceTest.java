@@ -17,7 +17,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -34,8 +33,7 @@ public class UserRegisterServiceTest {
 
     @BeforeClass
     public static void setupClass() {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.useEmulator("10.0.2.2", 8080);
+        FirebaseFirestore firestore = FirestoreInitializer.getInstance();
     }
     @Before
     public void setUp() throws InterruptedException {

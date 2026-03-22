@@ -33,8 +33,7 @@ public class UserSearchEventServiceTest {
 
     @BeforeClass
     public static void setupClass() {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.useEmulator("10.0.2.2", 8080);
+        FirebaseFirestore firestore = FirestoreInitializer.getInstance();
     }
 
     @Before

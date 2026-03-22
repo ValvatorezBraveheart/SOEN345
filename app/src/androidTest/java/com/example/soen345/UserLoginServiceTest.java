@@ -10,7 +10,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.soen345.service.AuthenticationException;
 import com.example.soen345.service.UserLogInService;
-import com.example.soen345.service.UserRegisterService;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,8 +34,7 @@ public class UserLoginServiceTest {
     private String role = "customer";
     @BeforeClass
     public static void setupClass() throws InterruptedException {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.useEmulator("10.0.2.2", 8080);
+        FirebaseFirestore firestore = FirestoreInitializer.getInstance();
 
         // Clear existing users in emulator
         CountDownLatch latch = new CountDownLatch(1);
