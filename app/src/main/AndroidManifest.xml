@@ -23,6 +23,18 @@
         </activity>
         <activity android:name=".logic.LoginActivity" android:exported="false" />
         <activity android:name=".logic.RegisterActivity" android:exported="false" />
+        <activity android:name=".logic.CustomerDashboardActivity" />
+        <activity android:name=".logic.RegisteredEventsActivity" />
+        <activity android:name=".logic.ProfileActivity" />
+        <activity android:name=".logic.SearchActivity" />
+        <activity android:name=".logic.AllEventsActivity" />
+        <activity android:name=".logic.EventDetailsActivity" />
+        <activity android:name=".logic.ReservedEventDetailsActivity" />
+        <activity android:name=".logic.CancelReservationActivity" />
+        <activity android:name=".logic.ReserveEventActivity" />
+        <activity android:name=".logic.EditProfileActivity" />
+        <activity android:name=".logic.PaymentMethodsActivity" />
+        <activity android:name=".logic.AddNewCardActivity" />
     </application>
 
 </manifest>
