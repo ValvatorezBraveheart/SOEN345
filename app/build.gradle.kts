@@ -52,6 +52,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(platform(libs.firebase.bom))
+    implementation("androidx.annotation:annotation:1.7.1")
 
     // Add the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
