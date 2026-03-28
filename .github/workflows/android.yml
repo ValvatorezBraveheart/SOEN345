@@ -21,6 +21,15 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=/usr/local/lib/android/sdk" >> local.properties
+          echo "TWILIO_ACCOUNT_SID=${{ secrets.TWILIO_ACCOUNT_SID }}" >> local.properties
+          echo "TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }}" >> local.properties
+          echo "TWILIO_SRC_PHONE=${{ secrets.TWILIO_SRC_PHONE }}" >> local.properties
+          echo "GMAIL_EMAIL=${{ secrets.GMAIL_EMAIL }}" >> local.properties
+          echo "GMAIL_APP_PASSWORD=${{ secrets.GMAIL_APP_PASSWORD }}" >> local.properties
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
