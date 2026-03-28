@@ -80,7 +80,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
 
         navManageEvents.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminDashboardActivity.this, ManageEventsActivity.class);
+            Intent intent = new Intent(AdminDashboardActivity.this, AdminManageEventsActivity.class);
             startActivity(intent);
             finish();
         });

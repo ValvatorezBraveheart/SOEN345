@@ -8,31 +8,36 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.soen345.Event;
 import com.example.soen345.R;
+import com.example.soen345.service.EventServiceInterface;
+import com.example.soen345.service.UserSearchEventService;
+import com.example.soen345.service.UserSession;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class ManageEventsActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AdminManageEventsActivity extends AppCompatActivity {
 
     private ImageView navHome;
     private ImageView navTickets;
     private ImageView navProfile;
     private ImageView navManageEvents;
     private ImageView searchIcon;
-
     private MaterialButton addEventButton;
-    private MaterialButton editEventButton1;
-    private MaterialButton cancelEventButton1;
-    private MaterialButton editEventButton2;
-    private MaterialButton cancelEventButton2;
-
-    private CardView manageEventCard1;
-    private CardView manageEventCard2;
+    private EventRepository eventRepository;
 
     private TextView chipAll;
     private TextView chipPublished;
     private TextView chipCancelled;
+    private RecyclerView rvEvents;
 
+    private EventAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,8 @@ public class ManageEventsActivity extends AppCompatActivity {
         setupBottomNavigation();
         setupTopActions();
         setupChipSelection();
-        setupCardActions();
         setupButtonActions();
+        setupRecyclerView();
     }
 
     private void initViews() {
@@ -54,34 +59,28 @@ public class ManageEventsActivity extends AppCompatActivity {
         searchIcon = findViewById(R.id.searchIcon);
 
         addEventButton = findViewById(R.id.addEventButton);
-        editEventButton1 = findViewById(R.id.editEventButton1);
-        cancelEventButton1 = findViewById(R.id.cancelEventButton1);
-        editEventButton2 = findViewById(R.id.editEventButton2);
-        cancelEventButton2 = findViewById(R.id.cancelEventButton2);
-
-        manageEventCard1 = findViewById(R.id.manageEventCard1);
-        manageEventCard2 = findViewById(R.id.manageEventCard2);
 
         chipAll = findViewById(R.id.chipAll);
         chipPublished = findViewById(R.id.chipPublished);
         chipCancelled = findViewById(R.id.chipCancelled);
+        rvEvents = findViewById(R.id.rvEvents);
     }
 
     private void setupBottomNavigation() {
         navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, AdminDashboardActivity.class);
+            Intent intent = new Intent(AdminManageEventsActivity.this, AdminDashboardActivity.class);
             startActivity(intent);
             finish();
         });
 
         navTickets.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, RegisteredEventsActivity.class);
+            Intent intent = new Intent(AdminManageEventsActivity.this, RegisteredEventsActivity.class);
             startActivity(intent);
             finish();
         });
 
         navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, ProfileActivity.class);
+            Intent intent = new Intent(AdminManageEventsActivity.this, ProfileActivity.class);
             startActivity(intent);
             finish();
         });
@@ -93,7 +92,7 @@ public class ManageEventsActivity extends AppCompatActivity {
 
     private void setupTopActions() {
         searchIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, SearchActivity.class);
+            Intent intent = new Intent(AdminManageEventsActivity.this, SearchActivity.class);
             startActivity(intent);
         });
     }
@@ -118,42 +117,43 @@ public class ManageEventsActivity extends AppCompatActivity {
         chip.setTextColor(getResources().getColor(android.R.color.darker_gray));
     }
 
-    private void setupCardActions() {
-        manageEventCard1.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, EventDetailsActivity.class);
-            startActivity(intent);
-        });
-
-        manageEventCard2.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, EventDetailsActivity.class);
-            startActivity(intent);
-        });
-    }
 
     private void setupButtonActions() {
         addEventButton.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, AddEventActivity.class);
+            Intent intent = new Intent(AdminManageEventsActivity.this, AdminAddEventActivity.class);
+            startActivity(intent);
+        });
+    }
+    public void setupRecyclerView(){
+
+        rvEvents.setLayoutManager(new LinearLayoutManager(this));
+
+        // FIXED: The constructor now correctly matches the standalone EventAdapter
+        adapter = new EventAdapter(new ArrayList<>(), event -> {
+            Intent intent = new Intent(AdminManageEventsActivity.this, AdminEditEventActivity.class);
+            intent.putExtra("event", event);
             startActivity(intent);
         });
 
-        editEventButton1.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, EditEventActivity.class);
-            startActivity(intent);
-        });
+        rvEvents.setAdapter(adapter);
 
-        cancelEventButton1.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, DeleteEventActivity.class);
-            startActivity(intent);
-        });
+        eventRepository = new EventRepository(FirebaseFirestore.getInstance());
+        loadEvents();
+    }
 
-        editEventButton2.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, EditEventActivity.class);
-            startActivity(intent);
-        });
+    private void loadEvents() {
+        String userId = UserSession.getInstance().getUser().userId;
 
-        cancelEventButton2.setOnClickListener(v -> {
-            Intent intent = new Intent(ManageEventsActivity.this, DeleteEventActivity.class);
-            startActivity(intent);
+        eventRepository.fetchEventsCreatedByUser(userId, new EventServiceInterface.EventCallback() {
+            @Override
+            public void onCallback(List<Event> events) {
+                adapter.updateData(events);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(AdminManageEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }

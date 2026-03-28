@@ -74,4 +74,23 @@ public class EventRepository implements EventServiceInterface {
                     }
                 });
     }
+    @Override
+    public void fetchEventsCreatedByUser(String userId, EventCallback callback) {
+        db.collection("events")
+                .whereEqualTo("adminId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Event> eventList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Event event = document.toObject(Event.class);
+                            event.eventId = document.getId();
+                            eventList.add(event);
+                        }
+                        callback.onCallback(eventList);
+                    } else {
+                        callback.onError(task.getException());
+                    }
+                });
+    }
 }

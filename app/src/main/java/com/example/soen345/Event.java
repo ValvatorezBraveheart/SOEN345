@@ -1,10 +1,15 @@
 package com.example.soen345;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
-public class Event {
+public class Event implements Parcelable {
     @DocumentId
     public String eventId;
     public String category;    // Matches "Concerts"
@@ -31,4 +36,47 @@ public class Event {
         this.description = description;
         this.adminId = adminId;
     }
+
+
+    protected Event(Parcel in) {
+        eventId = in.readString();
+        name = in.readString();
+        date = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
+        location = in.readString();
+        category = in.readString();
+        description = in.readString();
+        adminId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
+        parcel.writeString(eventId);
+        parcel.writeString(name);
+        parcel.writeString(date);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
+        parcel.writeString(location);
+        parcel.writeString(category);
+        parcel.writeString(description);
+        parcel.writeString(adminId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
 }

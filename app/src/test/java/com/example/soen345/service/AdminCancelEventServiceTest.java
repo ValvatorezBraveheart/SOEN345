@@ -39,50 +39,19 @@ public class AdminCancelEventServiceTest {
         service = new AdminCancelEventService(mockDb);
     }
 
-    // ===== Input validation tests =====
-
-    @Test
-    void testCancelFailsNullUserId() {
-        Event event = buildValidEvent();
-        AdminCancelEventService.CancelEventCallback callback = mock(AdminCancelEventService.CancelEventCallback.class);
-        service.cancelEvent(null, event, callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-        verify(callback, never()).onSuccess();
-    }
-
-    @Test
-    void testCancelFailsEmptyUserId() {
-        Event event = buildValidEvent();
-        AdminCancelEventService.CancelEventCallback callback = mock(AdminCancelEventService.CancelEventCallback.class);
-        service.cancelEvent("", event, callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-        verify(callback, never()).onSuccess();
-    }
-
-    @Test
-    void testCancelFailsNullEvent() {
-        AdminCancelEventService.CancelEventCallback callback = mock(AdminCancelEventService.CancelEventCallback.class);
-        service.cancelEvent("user123", null, callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-        verify(callback, never()).onSuccess();
-    }
 
     @Test
     void testCancelFailsNullEventId() {
-        Event event = buildValidEvent();
-        event.eventId = null;
         AdminCancelEventService.CancelEventCallback callback = mock(AdminCancelEventService.CancelEventCallback.class);
-        service.cancelEvent("user123", event, callback);
+        service.cancelEvent(null, callback);
         verify(callback).onFailure(any(IllegalArgumentException.class));
         verify(callback, never()).onSuccess();
     }
 
     @Test
     void testCancelFailsEmptyEventId() {
-        Event event = buildValidEvent();
-        event.eventId = "";
         AdminCancelEventService.CancelEventCallback callback = mock(AdminCancelEventService.CancelEventCallback.class);
-        service.cancelEvent("user123", event, callback);
+        service.cancelEvent("", callback);
         verify(callback).onFailure(any(IllegalArgumentException.class));
         verify(callback, never()).onSuccess();
     }
@@ -91,10 +60,10 @@ public class AdminCancelEventServiceTest {
 
     @Test
     void testCancelSuccess() {
-        Event event = buildValidEvent();
+        String eventId = "123";
         Task<Void> mockDeleteTask = mock(Task.class);
 
-        when(mockEventsRef.document(event.eventId)).thenReturn(mockDocRef);
+        when(mockEventsRef.document(eventId)).thenReturn(mockDocRef);
         when(mockDocRef.delete()).thenReturn(mockDeleteTask);
         when(mockDeleteTask.addOnSuccessListener(any())).thenReturn(mockDeleteTask);
         when(mockDeleteTask.addOnFailureListener(any())).thenReturn(mockDeleteTask);
@@ -105,7 +74,7 @@ public class AdminCancelEventServiceTest {
         }).when(mockDeleteTask).addOnSuccessListener(any());
 
         AdminCancelEventService.CancelEventCallback callback = mock(AdminCancelEventService.CancelEventCallback.class);
-        service.cancelEvent("user123", event, callback);
+        service.cancelEvent(eventId, callback);
 
         verify(callback).onSuccess();
         verify(callback, never()).onFailure(any());
@@ -113,10 +82,10 @@ public class AdminCancelEventServiceTest {
 
     @Test
     void testCancelFirestoreError() {
-        Event event = buildValidEvent();
+        String eventId = "123";
         Task<Void> mockDeleteTask = mock(Task.class);
 
-        when(mockEventsRef.document(event.eventId)).thenReturn(mockDocRef);
+        when(mockEventsRef.document(eventId)).thenReturn(mockDocRef);
         when(mockDocRef.delete()).thenReturn(mockDeleteTask);
         when(mockDeleteTask.addOnSuccessListener(any())).thenReturn(mockDeleteTask);
         doAnswer(inv -> {
@@ -126,25 +95,9 @@ public class AdminCancelEventServiceTest {
         }).when(mockDeleteTask).addOnFailureListener(any());
 
         AdminCancelEventService.CancelEventCallback callback = mock(AdminCancelEventService.CancelEventCallback.class);
-        service.cancelEvent("user123", event, callback);
+        service.cancelEvent(eventId, callback);
 
         verify(callback).onFailure(any(Exception.class));
         verify(callback, never()).onSuccess();
-    }
-
-    // ===== Helper =====
-
-    private Event buildValidEvent() {
-        Event event = new Event();
-        event.eventId     = "eventId";
-        event.name        = "event name";
-        event.date        = "2024-06-01";
-        event.startTime   = "01:00";
-        event.endTime     = "11:00";
-        event.location    = "Montreal";
-        event.category    = "Technology";
-        event.description = "Something something";
-        event.adminId     = "adminId";
-        return event;
     }
 }

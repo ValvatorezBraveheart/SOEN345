@@ -9,9 +9,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.soen345.R;
+import com.example.soen345.service.AdminCancelEventService;
+import com.example.soen345.service.UserSession;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class DeleteEventActivity extends AppCompatActivity {
+public class AdminDeleteEventActivity extends AppCompatActivity {
+    private String eventId;
 
     private ImageView backButton;
 
@@ -49,7 +53,7 @@ public class DeleteEventActivity extends AppCompatActivity {
 
     private void loadEventData() {
         Intent intent = getIntent();
-
+        eventId = intent.getStringExtra("eventId");
         String day = intent.getStringExtra("event_day");
         String month = intent.getStringExtra("event_month");
         String title = intent.getStringExtra("event_title");
@@ -75,12 +79,24 @@ public class DeleteEventActivity extends AppCompatActivity {
         keepEventButton.setOnClickListener(v -> finish());
 
         confirmDeleteButton.setOnClickListener(v -> {
-            Toast.makeText(this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+            String userId = UserSession.getInstance().getUser().userId;
+            AdminCancelEventService service = new AdminCancelEventService(FirebaseFirestore.getInstance());
+            service.cancelEvent(eventId, new AdminCancelEventService.CancelEventCallback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(AdminDeleteEventActivity.this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(AdminDeleteEventActivity.this, AdminManageEventsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
+                    finish();
+                }
 
-            Intent intent = new Intent(DeleteEventActivity.this, ManageEventsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
+                @Override
+                public void onFailure(Exception e) {
+
+                    Toast.makeText(AdminDeleteEventActivity.this, "Failed to delete event", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 }

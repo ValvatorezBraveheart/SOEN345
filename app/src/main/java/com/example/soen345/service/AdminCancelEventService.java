@@ -13,17 +13,13 @@ public class AdminCancelEventService {
         this.db = firestore;
         this.eventsRef = db.collection("events");
     }
-    public void cancelEvent(String userId, Event event, CancelEventCallback callback) {
-        if (userId == null || userId.isEmpty()) {
-            callback.onFailure(new IllegalArgumentException("Invalid userId"));
-            return;
-        }
-        if (event == null || event.eventId == null || event.eventId.isEmpty()) {
+    public void cancelEvent(String eventId, CancelEventCallback callback) {
+        if (eventId == null || eventId.isEmpty()) {
             callback.onFailure(new IllegalArgumentException("Invalid event"));
             return;
         }
 
-        eventsRef.document(event.eventId)
+        eventsRef.document(eventId)
                 .delete()
                 .addOnSuccessListener(unused -> callback.onSuccess())
                 .addOnFailureListener(callback::onFailure);

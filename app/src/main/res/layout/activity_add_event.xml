@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".logic.AddEventActivity">
+    tools:context=".logic.AdminAddEventActivity">
 
     <View
         android:layout_width="220dp"
