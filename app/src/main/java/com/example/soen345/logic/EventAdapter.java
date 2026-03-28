@@ -38,9 +38,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = events.get(position);
+
+        // Setting text from the database
         holder.name.setText(event.name);
         holder.location.setText(event.location);
         holder.category.setText(event.category);
+
+        // New: Directly setting the full date string (e.g., "22 August, 2026")
+        if (event.date != null) {
+            holder.date.setText(event.date);
+        } else {
+            holder.date.setText("Date TBD");
+        }
+
         holder.itemView.setOnClickListener(v -> listener.onEventClick(event));
     }
 
@@ -48,12 +58,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public int getItemCount() { return events.size(); }
 
     static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView name, location, category;
+        // Updated: Removed tvEventDay/Month, added 'date'
+        TextView name, location, category, date;
+
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.tvEventName);
             location = itemView.findViewById(R.id.tvEventLocation);
             category = itemView.findViewById(R.id.tvEventCategory);
+            // Updated: This matches the ID we put in the item_event.xml Pill
+            date = itemView.findViewById(R.id.tvEventDate);
         }
     }
 }

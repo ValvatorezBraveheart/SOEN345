@@ -108,14 +108,10 @@ public class EventDetailsActivity extends AppCompatActivity {
         // Organizer is dynamic from Firebase
         eventOrganizer.setText(event.adminId != null ? "Organizer ID: " + event.adminId : "Public Event");
 
-        // UI Design: Extracting Day and Month for the circular date icon
-        // This assumes 'date' format is something like "24 Sept 2026"
-        if (event.date != null && event.date.contains(" ")) {
-            String[] parts = event.date.split(" ");
-            if (parts.length >= 2) {
-                eventDateDay.setText(parts[0]);
-                eventDateMonth.setText(parts[1].toUpperCase());
-            }
+        if (event.date != null) {
+            eventDateFull.setText(event.date);
+
+            eventDateDay.setText(event.date.split(" ")[0]); // Optional: just takes "22"
         }
     }
 
