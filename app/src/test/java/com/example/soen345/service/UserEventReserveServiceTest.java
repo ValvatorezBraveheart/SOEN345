@@ -30,23 +30,39 @@ public class UserEventReserveServiceTest {
 
     @Mock
     private FirebaseFirestore mockDb;
-    @Mock private CollectionReference mockReservationRef;
-    @Mock private CollectionReference mockUsersRef;
-    @Mock private CollectionReference mockEventsRef;
-    @Mock private Query mockQuery;
-    @Mock private DocumentReference mockUsersDocRef;
-    @Mock private DocumentReference mockEventsDocRef;
-    @Mock private DocumentReference mockReservationsDocRef;
-    @Mock private Task<QuerySnapshot> mockQueryTask;
-    @Mock private Task<DocumentSnapshot> mockUsersDocTask;
-    @Mock private Task<DocumentSnapshot> mockEventsDocTask;
-    @Mock private Task<DocumentSnapshot> mockReservationsDocTask;
-    @Mock private Task<Void> mockVoidTask;
-    @Mock private QuerySnapshot mockQuerySnapshot;
-    @Mock private DocumentSnapshot mockDocSnapshot;
+    @Mock
+    private CollectionReference mockReservationRef;
+    @Mock
+    private CollectionReference mockUsersRef;
+    @Mock
+    private CollectionReference mockEventsRef;
+    @Mock
+    private Query mockQuery;
+    @Mock
+    private DocumentReference mockUsersDocRef;
+    @Mock
+    private DocumentReference mockEventsDocRef;
+    @Mock
+    private DocumentReference mockReservationsDocRef;
+    @Mock
+    private Task<QuerySnapshot> mockQueryTask;
+    @Mock
+    private Task<DocumentSnapshot> mockUsersDocTask;
+    @Mock
+    private Task<DocumentSnapshot> mockEventsDocTask;
+    @Mock
+    private Task<DocumentSnapshot> mockReservationsDocTask;
+    @Mock
+    private Task<Void> mockVoidTask;
+    @Mock
+    private QuerySnapshot mockQuerySnapshot;
+    @Mock
+    private DocumentSnapshot mockDocSnapshot;
 
-    @Mock private UserEventReserveService.ReserveEventCallback mockCallback;
-    @Mock private UserEventReserveService.AlreadyRegisteredCallback mockAlreadyRegisteredCallback;
+    @Mock
+    private UserEventReserveService.ReserveEventCallback mockCallback;
+    @Mock
+    private UserEventReserveService.AlreadyRegisteredCallback mockAlreadyRegisteredCallback;
 
     private UserEventReserveService service;
 

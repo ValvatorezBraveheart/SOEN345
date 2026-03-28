@@ -30,13 +30,19 @@ class UserSearchEventServiceTest {
 
     @Mock
     private FirebaseFirestore mockDb;
-    @Mock private CollectionReference mockEventsRef;
-    @Mock private Query mockQuery;
-    @Mock private Task<QuerySnapshot> mockTask;
-    @Mock private QuerySnapshot mockSnapshot;
+    @Mock
+    private CollectionReference mockEventsRef;
+    @Mock
+    private Query mockQuery;
+    @Mock
+    private Task<QuerySnapshot> mockTask;
+    @Mock
+    private QuerySnapshot mockSnapshot;
 
-    @Mock private OnSuccessListener<List<Event>> mockOnSuccess;
-    @Mock private OnFailureListener mockOnFailure;
+    @Mock
+    private OnSuccessListener<List<Event>> mockOnSuccess;
+    @Mock
+    private OnFailureListener mockOnFailure;
 
     private UserSearchEventService service;
 

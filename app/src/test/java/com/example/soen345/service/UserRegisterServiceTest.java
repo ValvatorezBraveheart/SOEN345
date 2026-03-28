@@ -11,6 +11,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.soen345.Event;
 import com.example.soen345.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -60,39 +61,45 @@ public class UserRegisterServiceTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "NULL",
-            "''"
+            "userId",
+            "fullName",
+            "username",
+            "password",
+            "role"
     }, nullValues = "NULL")
-    void testRegisterFailsMissingUserId(String userId) {
+    void testValidateEventNullField(String nullField) {
         User user = buildValidUser();
-        user.userId = userId;
-        UserRegisterService.UserRegisterCallback callback = mock(UserRegisterService.UserRegisterCallback.class);
-        service.registerUser(user, callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-        verify(callback, never()).onSuccess();
-    }
-    @ParameterizedTest
-    @CsvSource(value = {
-            "NULL",
-            "''"
-    }, nullValues = "NULL")
-    void testRegisterFailsMissingFullName(String fullName) {
-        User user = buildValidUser();
-        user.fullName = fullName;
-        UserRegisterService.UserRegisterCallback callback = mock(UserRegisterService.UserRegisterCallback.class);
-        service.registerUser(user, callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-        verify(callback, never()).onSuccess();
-    }
+        switch (nullField) {
+            case "userId":       user.userId   = null; break;
+            case "fullName":     user.fullName = null; break;
+            case "username":     user.username = null; break;
+            case "password":     user.password = null; break;
+            case "role":         user.role     = null; break;
+        }
 
+        UserRegisterService.UserRegisterCallback callback = mock(UserRegisterService.UserRegisterCallback.class);
+        service.registerUser(user, callback);
+        verify(callback).onFailure(any(IllegalArgumentException.class));
+        verify(callback, never()).onSuccess();
+    }
     @ParameterizedTest
     @CsvSource(value = {
-            "NULL",
-            "''"
+            "userId",
+            "fullName",
+            "username",
+            "password",
+            "role"
     }, nullValues = "NULL")
-    void testRegisterFailsMissingUsername(String name) {
+    void testValidateEventEmptyField(String nullField) {
         User user = buildValidUser();
-        user.username = name;
+        switch (nullField) {
+            case "userId":       user.userId   = ""; break;
+            case "fullName":     user.fullName = ""; break;
+            case "username":     user.username = ""; break;
+            case "password":     user.password = ""; break;
+            case "role":         user.role     = ""; break;
+        }
+
         UserRegisterService.UserRegisterCallback callback = mock(UserRegisterService.UserRegisterCallback.class);
         service.registerUser(user, callback);
         verify(callback).onFailure(any(IllegalArgumentException.class));
@@ -114,32 +121,6 @@ public class UserRegisterServiceTest {
         service.registerUser(user, callback);
         verify(callback).onFailure(any(IllegalArgumentException.class));
         verify(callback, never()).onSuccess();
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "NULL",
-            "''"
-    }, nullValues = "NULL")
-    void testRegisterFailsMissingPassword(String password) {
-        User user = buildValidUser();
-        user.password = password;
-        UserRegisterService.UserRegisterCallback callback = mock(UserRegisterService.UserRegisterCallback.class);
-        service.registerUser(user, callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "NULL",
-            "''"
-    }, nullValues = "NULL")
-    void testRegisterFailsMissingRole(String role) {
-        User user = buildValidUser();
-        user.role = role;
-        UserRegisterService.UserRegisterCallback callback = mock(UserRegisterService.UserRegisterCallback.class);
-        service.registerUser(user, callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
     }
 
     // ===== validateExistingAccount tests =====
