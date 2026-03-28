@@ -40,7 +40,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         // Dependency Injection (Manual)
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         eventService = new EventRepository(firestore);
-
         event = getIntent().getParcelableExtra("event");
 
         initViews();
@@ -64,31 +63,12 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void loadEventData() {
-        String eventId = getIntent().getStringExtra("EVENT_ID");
-
-        if (eventId == null || eventId.isEmpty()) {
-            Toast.makeText(this, "Error: Event ID missing", Toast.LENGTH_SHORT).show();
+        if (event == null) {
+            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-
-        // Direct fetch to keep it working without the deleted Repository
-        FirebaseFirestore.getInstance()
-                .collection("events")
-                .document(eventId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        event.eventId = documentSnapshot.getId();
-                        populateUI(event); // This calls your existing UI mapper
-                    } else {
-                        Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to load: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        populateUI(event);
     }
 
     private void populateUI(Event event) {

@@ -33,7 +33,6 @@
         <activity android:name=".logic.CancelReservationActivity" />
         <activity android:name=".logic.ReserveEventActivity" />
         <activity android:name=".logic.EditProfileActivity" />
-        <activity android:name=".logic.AdminDashboardActivity" />
         <activity android:name=".logic.AdminAddEventActivity" />
         <activity android:name=".logic.AdminEditEventActivity" />
         <activity android:name=".logic.AdminManageEventsActivity" />

@@ -2,28 +2,18 @@ package com.example.soen345.logic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soen345.Event;
 import com.example.soen345.R;
 import com.google.android.material.button.MaterialButton;
 
-import java.util.List;
-
 public class ReservedEventDetailsActivity extends AppCompatActivity {
 
     private ImageView backButton;
-
-    private TextView eventDateDay;
-    private TextView eventDateMonth;
     private TextView eventTitle;
     private TextView eventOrganizer;
     private TextView ticketStatus;
@@ -50,9 +40,6 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
 
     private void initViews() {
         backButton = findViewById(R.id.backButton);
-
-        eventDateDay = findViewById(R.id.eventDateDay);
-        eventDateMonth = findViewById(R.id.eventDateMonth);
         eventTitle = findViewById(R.id.eventTitle);
         eventOrganizer = findViewById(R.id.eventOrganizer);
         ticketStatus = findViewById(R.id.ticketStatus);

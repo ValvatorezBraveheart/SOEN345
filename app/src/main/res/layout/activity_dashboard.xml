@@ -101,6 +101,8 @@
                     <TextView android:id="@+id/chipAll" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="10dp" android:background="@drawable/chip_selected_bg" android:paddingStart="20dp" android:paddingTop="12dp" android:paddingEnd="20dp" android:paddingBottom="12dp" android:text="All Events" android:textColor="#FFFFFF" android:textStyle="bold" android:textSize="14sp"/>
                     <TextView android:id="@+id/chipConcerts" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="10dp" android:background="@drawable/chip_unselected_bg" android:paddingStart="20dp" android:paddingTop="12dp" android:paddingEnd="20dp" android:paddingBottom="12dp" android:text="Concerts" android:textColor="#777777" android:textSize="14sp"/>
                     <TextView android:id="@+id/chipSports" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="10dp" android:background="@drawable/chip_unselected_bg" android:paddingStart="20dp" android:paddingTop="12dp" android:paddingEnd="20dp" android:paddingBottom="12dp" android:text="Sports" android:textColor="#777777" android:textSize="14sp"/>
+                    <TextView android:id="@+id/chipTheaters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="10dp" android:background="@drawable/chip_unselected_bg" android:paddingStart="20dp" android:paddingTop="12dp" android:paddingEnd="20dp" android:paddingBottom="12dp" android:text="Theaters" android:textColor="#777777" android:textSize="14sp"/>
+
                 </LinearLayout>
             </HorizontalScrollView>
 

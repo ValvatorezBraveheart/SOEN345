@@ -70,11 +70,7 @@ public class AdminAddEventActivity extends AppCompatActivity {
         String[] categories = {
                 "Concerts",
                 "Sports",
-                "Travel",
-                "Theater",
-                "Business",
-                "Festival",
-                "Exhibition"
+                "Theater"
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(

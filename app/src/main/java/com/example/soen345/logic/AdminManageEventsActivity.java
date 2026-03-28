@@ -7,14 +7,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.soen345.Event;
 import com.example.soen345.R;
 import com.example.soen345.service.EventServiceInterface;
-import com.example.soen345.service.UserSearchEventService;
 import com.example.soen345.service.UserSession;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +34,6 @@ public class AdminManageEventsActivity extends AppCompatActivity {
     private TextView chipPublished;
     private TextView chipCancelled;
     private RecyclerView rvEvents;
-
     private EventAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

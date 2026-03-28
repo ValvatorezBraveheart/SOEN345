@@ -10,18 +10,21 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.soen345.Event;
 import com.example.soen345.R;
 import com.example.soen345.service.UserSearchEventService;
 import com.example.soen345.service.UserSession;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
 
     private RecyclerView rvDashboardEvents;
     private EventAdapter adapter;
     private UserSearchEventService searchService;
-    private TextView seeAllText, chipAll, chipConcerts, chipSports;
+    private TextView seeAllText, chipAll, chipConcerts, chipSports, chipTheaters;
     private FrameLayout navManageEventsContainer;
     private ImageView navTickets, navProfile, navHome, navManageEvents;
 
@@ -51,6 +54,7 @@ public class DashboardActivity extends AppCompatActivity {
         chipAll = findViewById(R.id.chipAll);
         chipConcerts = findViewById(R.id.chipConcerts);
         chipSports = findViewById(R.id.chipSports);
+        chipTheaters = findViewById(R.id.chipTheaters);
 
         // Navigation Icons
         navHome = findViewById(R.id.navHome);
@@ -72,7 +76,7 @@ public class DashboardActivity extends AppCompatActivity {
         adapter = new EventAdapter(new ArrayList<>(), event -> {
             Intent intent = new Intent(this, EventDetailsActivity.class);
             // This eventId is now automatically pulled via @DocumentId in your Event class
-            intent.putExtra("EVENT_ID", event.eventId);
+            intent.putExtra("event", event);
             startActivity(intent);
         });
         rvDashboardEvents.setAdapter(adapter);
@@ -106,12 +110,19 @@ public class DashboardActivity extends AppCompatActivity {
     private void loadDashboardData(String category) {
         // Pass the category to the service to filter the list dynamically
         searchService.getEvents(category, null, null,
-                list -> {
-                    if (list != null) {
-                        adapter.updateData(list);
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+                        if (events != null) {
+                            adapter.updateData(events);
+                        }
                     }
-                },
-                e -> Toast.makeText(this, "Error syncing events", Toast.LENGTH_SHORT).show()
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(DashboardActivity.this, "Error syncing events", Toast.LENGTH_SHORT).show();
+                    }
+                }
         );
     }
 
