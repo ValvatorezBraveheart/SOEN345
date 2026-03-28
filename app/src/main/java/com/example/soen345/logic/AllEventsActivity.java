@@ -7,27 +7,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.soen345.Event;
 import com.example.soen345.R;
+import com.example.soen345.service.EventServiceInterface;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AllEventsActivity extends AppCompatActivity {
 
-    private ImageView navHome;
-    private ImageView navTickets;
-    private ImageView navProfile;
-    private ImageView searchIcon;
+    private ImageView navHome, navTickets, navProfile, searchIcon;
+    private TextView chipAll, chipConcerts, chipSports, chipTravel, chipTheater;
 
-    private TextView chipAll;
-    private TextView chipConcerts;
-    private TextView chipSports;
-    private TextView chipTravel;
-    private TextView chipTheater;
+    private RecyclerView rvEvents;
+    // FIXED: Use the standalone EventAdapter, not the one inside ReservedEventDetailsActivity
+    private EventAdapter adapter;
 
-    private CardView eventCard1;
-    private CardView eventCard2;
-    private CardView eventCard3;
-    private CardView eventCard4;
+    private EventServiceInterface eventService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,9 @@ public class AllEventsActivity extends AppCompatActivity {
         setupBottomNavigation();
         setupTopActions();
         setupChipSelection();
-        setupEventCards();
+        setupRecyclerView();
+
+        loadEvents("All");
     }
 
     private void initViews() {
@@ -53,45 +55,51 @@ public class AllEventsActivity extends AppCompatActivity {
         chipTravel = findViewById(R.id.chipTravel);
         chipTheater = findViewById(R.id.chipTheater);
 
-        eventCard1 = findViewById(R.id.eventCard1);
-        eventCard2 = findViewById(R.id.eventCard2);
-        eventCard3 = findViewById(R.id.eventCard3);
-        eventCard4 = findViewById(R.id.eventCard4);
+        rvEvents = findViewById(R.id.rvEvents);
     }
 
-    private void setupBottomNavigation() {
-        navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(AllEventsActivity.this, CustomerDashboardActivity.class);
+    private void setupRecyclerView() {
+        rvEvents.setLayoutManager(new LinearLayoutManager(this));
+
+        // FIXED: The constructor now correctly matches the standalone EventAdapter
+        adapter = new EventAdapter(new ArrayList<Event>(), event -> {
+            Intent intent = new Intent(AllEventsActivity.this, EventDetailsActivity.class);
+            intent.putExtra("EVENT_ID", event.eventId);
             startActivity(intent);
-            finish();
         });
 
-        navTickets.setOnClickListener(v -> {
-            Intent intent = new Intent(AllEventsActivity.this, RegisteredEventsActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        rvEvents.setAdapter(adapter);
 
-        navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(AllEventsActivity.this, ProfileActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        eventService = new EventRepository(firestore);
     }
 
-    private void setupTopActions() {
-        searchIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(AllEventsActivity.this, SearchActivity.class);
-            startActivity(intent);
-        });
+    private void loadEvents(String category) {
+        EventServiceInterface.EventCallback callback = new EventServiceInterface.EventCallback() {
+            @Override
+            public void onCallback(List<Event> list) {
+                adapter.updateData(list);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(AllEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        if (category.equals("All")) {
+            eventService.fetchAllEvents(callback);
+        } else {
+            eventService.fetchEventsByCategory(category, callback);
+        }
     }
 
     private void setupChipSelection() {
-        chipAll.setOnClickListener(v -> selectChip(chipAll));
-        chipConcerts.setOnClickListener(v -> selectChip(chipConcerts));
-        chipSports.setOnClickListener(v -> selectChip(chipSports));
-        chipTravel.setOnClickListener(v -> selectChip(chipTravel));
-        chipTheater.setOnClickListener(v -> selectChip(chipTheater));
+        chipAll.setOnClickListener(v -> { selectChip(chipAll); loadEvents("All"); });
+        chipConcerts.setOnClickListener(v -> { selectChip(chipConcerts); loadEvents("Concerts"); });
+        chipSports.setOnClickListener(v -> { selectChip(chipSports); loadEvents("Sports"); });
+        chipTravel.setOnClickListener(v -> { selectChip(chipTravel); loadEvents("Travel"); });
+        chipTheater.setOnClickListener(v -> { selectChip(chipTheater); loadEvents("Theater"); });
     }
 
     private void selectChip(TextView selectedChip) {
@@ -110,29 +118,22 @@ public class AllEventsActivity extends AppCompatActivity {
         chip.setTextColor(getResources().getColor(android.R.color.darker_gray));
     }
 
-    private void setupEventCards() {
-        eventCard1.setOnClickListener(v -> {
-            Intent intent = new Intent(AllEventsActivity.this, EventDetailsActivity.class);
-            startActivity(intent);
+    private void setupBottomNavigation() {
+        navHome.setOnClickListener(v -> {
+            startActivity(new Intent(this, CustomerDashboardActivity.class));
+            finish();
         });
+        navTickets.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisteredEventsActivity.class));
+            finish();
+        });
+        navProfile.setOnClickListener(v -> {
+            startActivity(new Intent(this, ProfileActivity.class));
+            finish();
+        });
+    }
 
-        eventCard2.setOnClickListener(v ->{
-                    Intent intent = new Intent(AllEventsActivity.this, EventDetailsActivity.class);
-                    startActivity(intent);
-                }
-        );
-
-        eventCard3.setOnClickListener(v ->{
-                    Intent intent = new Intent(AllEventsActivity.this, EventDetailsActivity.class);
-                    startActivity(intent);
-                }
-        );
-
-        eventCard4.setOnClickListener(v ->
-                {
-                    Intent intent = new Intent(AllEventsActivity.this, EventDetailsActivity.class);
-                    startActivity(intent);
-                }
-        );
+    private void setupTopActions() {
+        searchIcon.setOnClickListener(v -> startActivity(new Intent(this, SearchActivity.class)));
     }
 }
