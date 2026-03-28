@@ -4,14 +4,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import android.util.Log;
+
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.soen345.service.AuthenticationException;
 import com.example.soen345.service.UserLogInService;
-import com.example.soen345.service.UserRegisterService;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,8 +34,7 @@ public class UserLoginServiceTest {
     private String role = "customer";
     @BeforeClass
     public static void setupClass() throws InterruptedException {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.useEmulator("10.0.2.2", 8080);
+        FirebaseFirestore firestore = FirestoreInitializer.getInstance();
 
         // Clear existing users in emulator
         CountDownLatch latch = new CountDownLatch(1);
@@ -124,6 +125,29 @@ public class UserLoginServiceTest {
         });
         if (!latch.await(5, TimeUnit.SECONDS)) {
             fail("Callback not called in time");
+        }
+    }
+    @After
+    public void tearDown() throws InterruptedException {
+        clearData();
+    }
+    private void clearData() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        FirebaseFirestore.getInstance().collection("users").get()
+                .addOnSuccessListener(snapshot -> {
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        FirebaseFirestore.getInstance().collection("users").document(doc.getId()).delete();
+                    }
+                    latch.countDown();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirestoreClear", "Failed to clear: " + e.getMessage());
+                    latch.countDown();
+                });
+
+        if (!latch.await(10, TimeUnit.SECONDS)) {
+            Log.w("FirestoreClear", "Timeout while clearing Firestore");
         }
     }
 }

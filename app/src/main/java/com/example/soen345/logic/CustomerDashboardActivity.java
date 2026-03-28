@@ -2,132 +2,131 @@ package com.example.soen345.logic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.soen345.R;
+import com.example.soen345.service.UserSearchEventService;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.ArrayList;
 
 public class CustomerDashboardActivity extends AppCompatActivity {
 
-    private ImageView navHome;
-    private ImageView navTickets;
-    private ImageView navProfile;
-    private ImageView searchIcon;
-    private ImageView profileImage;
-
-    private CardView eventCard1;
-    private CardView eventCard2;
-
-    private TextView chipAll;
-    private TextView chipConcerts;
-    private TextView chipSports;
-    private TextView chipTravel;
-    private TextView chipTheater;
-    private TextView seeAllText;
+    private RecyclerView rvDashboardEvents;
+    private EventAdapter adapter;
+    private UserSearchEventService searchService;
+    private TextView seeAllText, chipAll, chipConcerts, chipSports;
+    private ImageView navTickets, navProfile, navHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
+        // Initialize the new Service
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        searchService = new UserSearchEventService(firestore);
+
         initViews();
-        setupBottomNavigation();
-        setupTopActions();
-        setupEventCards();
-        setupChipSelection();
-        setupSeeAllAction();
+        setupRecyclerView();
+        setupFilters();
+        setupNavigation();
+
+        // Initial Load: Fetch all events for the dashboard
+        loadDashboardData(null);
     }
 
     private void initViews() {
-        navHome = findViewById(R.id.navHome);
-        navTickets = findViewById(R.id.navTickets);
-        navProfile = findViewById(R.id.navProfile);
-        searchIcon = findViewById(R.id.searchIcon);
-        profileImage = findViewById(R.id.profileImage);
+        rvDashboardEvents = findViewById(R.id.rvDashboardEvents);
+        seeAllText = findViewById(R.id.seeAllText);
 
-        eventCard1 = findViewById(R.id.eventCard1);
-        eventCard2 = findViewById(R.id.eventCard2);
-
+        // Filter Chips
         chipAll = findViewById(R.id.chipAll);
         chipConcerts = findViewById(R.id.chipConcerts);
         chipSports = findViewById(R.id.chipSports);
-        chipTravel = findViewById(R.id.chipTravel);
-        chipTheater = findViewById(R.id.chipTheater);
-        seeAllText = findViewById(R.id.seeAllText);
+
+        // Navigation Icons
+        navHome = findViewById(R.id.navHome);
+        navTickets = findViewById(R.id.navTickets);
+        navProfile = findViewById(R.id.navProfile);
     }
 
-    private void setupBottomNavigation() {
-        navHome.setOnClickListener(v -> {
-            // Already on dashboard
-        });
-
-        navTickets.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerDashboardActivity.this, RegisteredEventsActivity.class);
+    private void setupRecyclerView() {
+        rvDashboardEvents.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new EventAdapter(new ArrayList<>(), event -> {
+            Intent intent = new Intent(this, EventDetailsActivity.class);
+            // This eventId is now automatically pulled via @DocumentId in your Event class
+            intent.putExtra("EVENT_ID", event.eventId);
             startActivity(intent);
-            finish();
         });
-
-        navProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerDashboardActivity.this, ProfileActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        rvDashboardEvents.setAdapter(adapter);
     }
 
-    private void setupTopActions() {
-        searchIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerDashboardActivity.this, SearchActivity.class);
-            startActivity(intent);
-        });
-
-        profileImage.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerDashboardActivity.this, ProfileActivity.class);
-            startActivity(intent);
-        });
-    }
-
-    private void setupEventCards() {
-        eventCard1.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerDashboardActivity.this, EventDetailsActivity.class);
-            startActivity(intent);
-        });
-
-        eventCard2.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerDashboardActivity.this, EventDetailsActivity.class);
-            startActivity(intent);
-        });
-    }
-
-    private void setupChipSelection() {
-        chipAll.setOnClickListener(v -> selectChip(chipAll));
-        chipConcerts.setOnClickListener(v -> selectChip(chipConcerts));
-        chipSports.setOnClickListener(v -> selectChip(chipSports));
-        chipTravel.setOnClickListener(v -> selectChip(chipTravel));
-        chipTheater.setOnClickListener(v -> selectChip(chipTheater));
-    }
-
-    private void setupSeeAllAction() {
+    private void setupFilters() {
+        // "See All" takes you to the AllEventsActivity
         seeAllText.setOnClickListener(v -> {
-            Intent intent = new Intent(CustomerDashboardActivity.this, AllEventsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, AllEventsActivity.class));
+        });
+
+        // Chip: All
+        chipAll.setOnClickListener(v -> {
+            updateChipUI(chipAll);
+            loadDashboardData(null);
+        });
+
+        // Chip: Concerts
+        chipConcerts.setOnClickListener(v -> {
+            updateChipUI(chipConcerts);
+            loadDashboardData("Concerts");
+        });
+
+        // Chip: Sports
+        chipSports.setOnClickListener(v -> {
+            updateChipUI(chipSports);
+            loadDashboardData("Sports");
         });
     }
-    private void selectChip(TextView selectedChip) {
-        resetChip(chipAll);
-        resetChip(chipConcerts);
-        resetChip(chipSports);
-        resetChip(chipTravel);
-        resetChip(chipTheater);
 
+    private void loadDashboardData(String category) {
+        // Pass the category to the service to filter the list dynamically
+        searchService.getEvents(category, null, null,
+                list -> {
+                    if (list != null) {
+                        adapter.updateData(list);
+                    }
+                },
+                e -> Toast.makeText(this, "Error syncing events", Toast.LENGTH_SHORT).show()
+        );
+    }
+
+    private void updateChipUI(TextView selectedChip) {
+        // Reset all chips to unselected style
+        chipAll.setBackgroundResource(R.drawable.chip_unselected_bg);
+        chipAll.setTextColor(getResources().getColor(android.R.color.darker_gray));
+
+        chipConcerts.setBackgroundResource(R.drawable.chip_unselected_bg);
+        chipConcerts.setTextColor(getResources().getColor(android.R.color.darker_gray));
+
+        chipSports.setBackgroundResource(R.drawable.chip_unselected_bg);
+        chipSports.setTextColor(getResources().getColor(android.R.color.darker_gray));
+
+        // Apply selected style to the clicked chip
         selectedChip.setBackgroundResource(R.drawable.chip_selected_bg);
         selectedChip.setTextColor(getResources().getColor(android.R.color.white));
     }
 
-    private void resetChip(TextView chip) {
-        chip.setBackgroundResource(R.drawable.chip_unselected_bg);
-        chip.setTextColor(getResources().getColor(android.R.color.darker_gray));
+    private void setupNavigation() {
+        navHome.setOnClickListener(v -> loadDashboardData(null));
+
+        navTickets.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisteredEventsActivity.class));
+        });
+
+        navProfile.setOnClickListener(v -> {
+            // Example: startActivity(new Intent(this, ProfileActivity.class));
+        });
     }
 }

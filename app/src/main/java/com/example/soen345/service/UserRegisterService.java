@@ -27,8 +27,9 @@ public class UserRegisterService {
         }
         validateExistingAccount(newUser, (isValid, errorMessage) -> {
             if (isValid){
-                usersRef.document(newUser.userId).set(newUser);
-                callback.onSuccess();
+                usersRef.document(newUser.userId).set(newUser)
+                        .addOnSuccessListener(unused -> callback.onSuccess())
+                        .addOnFailureListener(callback::onFailure);
             } else {
                 Log.i("UserRegister", "Error");
                 callback.onFailure(new IllegalArgumentException(errorMessage));
