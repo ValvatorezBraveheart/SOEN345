@@ -17,7 +17,6 @@ import com.example.soen345.R;
 import com.example.soen345.service.AdminAddEventService;
 import com.example.soen345.service.UserSession;
 import com.google.android.material.button.MaterialButton;
-import com.google.firebase.Firebase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
@@ -32,7 +31,8 @@ public class AdminAddEventActivity extends AppCompatActivity {
     private EditText eventOrganizerEditText;
     private AutoCompleteTextView categoryAutoComplete;
     private EditText eventDateEditText;
-    private EditText eventTimeEditText;
+    private EditText eventStartTimeEditText;
+    private EditText eventEndTimeEditText;
     private EditText eventLocationEditText;
     private EditText eventDescriptionEditText;
 
@@ -57,7 +57,8 @@ public class AdminAddEventActivity extends AppCompatActivity {
         eventOrganizerEditText = findViewById(R.id.eventOrganizerEditText);
         categoryAutoComplete = findViewById(R.id.categoryAutoComplete);
         eventDateEditText = findViewById(R.id.eventDateEditText);
-        eventTimeEditText = findViewById(R.id.eventTimeEditText);
+        eventStartTimeEditText = findViewById(R.id.startTimeEditText);
+        eventEndTimeEditText = findViewById(R.id.endTimeEditText);
         eventLocationEditText = findViewById(R.id.eventLocationEditText);
         eventDescriptionEditText = findViewById(R.id.eventDescriptionEditText);
 
@@ -112,7 +113,7 @@ public class AdminAddEventActivity extends AppCompatActivity {
     }
 
     private void setupTimePicker() {
-        eventTimeEditText.setOnClickListener(v -> {
+        eventStartTimeEditText.setOnClickListener(v -> {
             Calendar calendar = Calendar.getInstance();
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(
@@ -131,7 +132,35 @@ public class AdminAddEventActivity extends AppCompatActivity {
                                 minute,
                                 amPm
                         );
-                        eventTimeEditText.setText(formattedTime);
+                        eventStartTimeEditText.setText(formattedTime);
+                    },
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    false
+            );
+
+            timePickerDialog.show();
+        });
+        eventEndTimeEditText.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+
+            TimePickerDialog timePickerDialog = new TimePickerDialog(
+                    AdminAddEventActivity.this,
+                    (view, hourOfDay, minute) -> {
+                        String amPm = (hourOfDay >= 12) ? "PM" : "AM";
+                        int formattedHour = hourOfDay % 12;
+                        if (formattedHour == 0) {
+                            formattedHour = 12;
+                        }
+
+                        String formattedTime = String.format(
+                                Locale.getDefault(),
+                                "%d:%02d %s",
+                                formattedHour,
+                                minute,
+                                amPm
+                        );
+                        eventEndTimeEditText.setText(formattedTime);
                     },
                     calendar.get(Calendar.HOUR_OF_DAY),
                     calendar.get(Calendar.MINUTE),
@@ -150,7 +179,8 @@ public class AdminAddEventActivity extends AppCompatActivity {
             String organizer = eventOrganizerEditText.getText().toString().trim();
             String category = categoryAutoComplete.getText().toString().trim();
             String date = eventDateEditText.getText().toString().trim();
-            String time = eventTimeEditText.getText().toString().trim();
+            String startTime = eventStartTimeEditText.getText().toString().trim();
+            String endTime = eventEndTimeEditText.getText().toString().trim();
             String location = eventLocationEditText.getText().toString().trim();
             String description = eventDescriptionEditText.getText().toString().trim();
 
@@ -158,7 +188,8 @@ public class AdminAddEventActivity extends AppCompatActivity {
                     organizer.isEmpty() ||
                     category.isEmpty() ||
                     date.isEmpty() ||
-                    time.isEmpty() ||
+                    startTime.isEmpty() ||
+                    endTime.isEmpty() ||
                     location.isEmpty() ||
                     description.isEmpty()) {
 
@@ -167,7 +198,7 @@ public class AdminAddEventActivity extends AppCompatActivity {
             }
             String eventId = UUID.randomUUID().toString();
             String userId = UserSession.getInstance().getUser().userId;
-            Event newEvent = new Event(eventId,title,date, time, time, location,category,description, userId);
+            Event newEvent = new Event(eventId,title,date, startTime, endTime, location,category,description, userId);
 
 
             AdminAddEventService service = new AdminAddEventService(FirebaseFirestore.getInstance());

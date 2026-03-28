@@ -7,7 +7,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EventRepository implements EventServiceInterface {
     private final FirebaseFirestore db;
@@ -87,6 +89,46 @@ public class EventRepository implements EventServiceInterface {
                             eventList.add(event);
                         }
                         callback.onCallback(eventList);
+                    } else {
+                        callback.onError(task.getException());
+                    }
+                });
+    }
+    @Override
+    public void fetchEventsReservedByUser(String userId, EventCallback callback) {
+        db.collection("reservations")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<String> eventIds = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String eventId = document.getString("eventId");
+                            if (eventId != null) eventIds.add(eventId);
+                        }
+
+                        if (eventIds.isEmpty()) {
+                            callback.onCallback(new ArrayList<>());
+                            return;
+                        }
+
+                        // Fetch all events by their IDs
+                        db.collection("events")
+                                .whereIn("__name__", eventIds)
+                                .get()
+                                .addOnCompleteListener(eventTask -> {
+                                    if (eventTask.isSuccessful()) {
+                                        List<Event> eventList = new ArrayList<>();
+                                        for (QueryDocumentSnapshot document : eventTask.getResult()) {
+                                            Event event = document.toObject(Event.class);
+                                            event.eventId = document.getId();
+                                            eventList.add(event);
+                                        }
+                                        callback.onCallback(eventList);
+                                    } else {
+                                        callback.onError(eventTask.getException());
+                                    }
+                                });
                     } else {
                         callback.onError(task.getException());
                     }

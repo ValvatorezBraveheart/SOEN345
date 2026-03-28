@@ -166,13 +166,26 @@
                     android:clickable="true"/>
 
                 <EditText
-                    android:id="@+id/eventTimeEditText"
+                    android:id="@+id/startTimeEditText"
                     android:layout_width="0dp"
                     android:layout_height="56dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/input_field"
-                    android:hint="Time"
+                    android:hint="Start Time"
+                    android:padding="14dp"
+                    android:textColor="#1E1E1E"
+                    android:textColorHint="#999999"
+                    android:focusable="false"
+                    android:clickable="true"/>
+                <EditText
+                    android:id="@+id/endTimeEditText"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/input_field"
+                    android:hint="End Time"
                     android:padding="14dp"
                     android:textColor="#1E1E1E"
                     android:textColorHint="#999999"

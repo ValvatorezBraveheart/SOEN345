@@ -66,7 +66,7 @@ public class AllEventsActivity extends AppCompatActivity {
         // FIXED: The constructor now correctly matches the standalone EventAdapter
         adapter = new EventAdapter(new ArrayList<Event>(), event -> {
             Intent intent = new Intent(AllEventsActivity.this, EventDetailsActivity.class);
-            intent.putExtra("EVENT_ID", event.eventId);
+            intent.putExtra("event", event);
             startActivity(intent);
         });
 

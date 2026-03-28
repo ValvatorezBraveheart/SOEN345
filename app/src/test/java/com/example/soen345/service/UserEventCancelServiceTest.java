@@ -41,26 +41,11 @@ public class UserEventCancelServiceTest {
     }
 
 
-    @Test
-    void testCancelFailsNullUserId() {
-        UserEventCancelService.CancelReservationCallback callback = mock(UserEventCancelService.CancelReservationCallback.class);
-        service.cancelReservation(null, "123", callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-        verify(callback, never()).onSuccess();
-    }
-
-    @Test
-    void testCancelFailsEmptyUserId() {
-        UserEventCancelService.CancelReservationCallback callback = mock(UserEventCancelService.CancelReservationCallback.class);
-        service.cancelReservation("", "123", callback);
-        verify(callback).onFailure(any(IllegalArgumentException.class));
-        verify(callback, never()).onSuccess();
-    }
 
     @Test
     void testCancelFailsNullReservationId() {
         UserEventCancelService.CancelReservationCallback callback = mock(UserEventCancelService.CancelReservationCallback.class);
-        service.cancelReservation("123", null, callback);
+        service.cancelReservation(null, callback);
         verify(callback).onFailure(any(IllegalArgumentException.class));
         verify(callback, never()).onSuccess();
     }
@@ -68,7 +53,7 @@ public class UserEventCancelServiceTest {
     @Test
     void testCancelFailsEmptyReservationId() {
         UserEventCancelService.CancelReservationCallback callback = mock(UserEventCancelService.CancelReservationCallback.class);
-        service.cancelReservation("123", "", callback);
+        service.cancelReservation("", callback);
         verify(callback).onFailure(any(IllegalArgumentException.class));
         verify(callback, never()).onSuccess();
     }
@@ -90,7 +75,7 @@ public class UserEventCancelServiceTest {
         }).when(mockDeleteTask).addOnSuccessListener(any());
 
         UserEventCancelService.CancelReservationCallback callback = mock(UserEventCancelService.CancelReservationCallback.class);
-        service.cancelReservation("user123", "res123", callback);
+        service.cancelReservation("res123", callback);
 
         verify(callback).onSuccess();
         verify(callback, never()).onFailure(any());
@@ -110,7 +95,7 @@ public class UserEventCancelServiceTest {
         }).when(mockDeleteTask).addOnFailureListener(any());
 
         UserEventCancelService.CancelReservationCallback callback = mock(UserEventCancelService.CancelReservationCallback.class);
-        service.cancelReservation("user123", "res123", callback);
+        service.cancelReservation("res123", callback);
 
         verify(callback).onFailure(any(Exception.class));
         verify(callback, never()).onSuccess();

@@ -33,6 +33,7 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
     private TextView eventCategory;
 
 
+    private Event event;
 
     private MaterialButton viewEventButton;
     private MaterialButton cancelReservationButton;
@@ -41,7 +42,7 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reserved_event_details);
-
+        event = getIntent().getParcelableExtra("event");
         initViews();
         loadReservationData();
         setupActions();
@@ -67,40 +68,16 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
     }
 
     private void loadReservationData() {
-        Intent intent = getIntent();
+        if (event == null) return;
 
-        String day = intent.getStringExtra("event_day");
-        String month = intent.getStringExtra("event_month");
-        String title = intent.getStringExtra("event_title");
-        String organizer = intent.getStringExtra("event_organizer");
-        String status = intent.getStringExtra("ticket_status");
-        String dateFull = intent.getStringExtra("event_date_full");
-        String time = intent.getStringExtra("event_time");
-        String location = intent.getStringExtra("event_location");
-        String category = intent.getStringExtra("event_category");
+        eventTitle.setText(event.name);
+        eventDateFull.setText(event.date);
+        eventTime.setText(event.startTime);
+        eventLocation.setText(event.location);
+        eventCategory.setText(event.category);
+        ticketStatus.setText("Reserved");
 
-
-        if (day == null) day = "24";
-        if (month == null) month = "SEP";
-        if (title == null) title = "Summer Music Festival";
-        if (organizer == null) organizer = "Velox Productions";
-        if (status == null) status = "Reserved";
-        if (dateFull == null) dateFull = "24 Sept 2026";
-        if (time == null) time = "7:00 PM";
-        if (location == null) location = "Bell Centre, Montreal";
-        if (category == null) category = "Concerts";
-
-
-        eventDateDay.setText(day);
-        eventDateMonth.setText(month);
-        eventTitle.setText(title);
-        eventOrganizer.setText(organizer);
-        ticketStatus.setText(status);
-        eventDateFull.setText(dateFull);
-        eventTime.setText(time);
-        eventLocation.setText(location);
-        eventCategory.setText(category);
-
+        eventOrganizer.setText(event.adminId);
     }
 
     private void setupActions() {
@@ -108,22 +85,16 @@ public class ReservedEventDetailsActivity extends AppCompatActivity {
 
         viewEventButton.setOnClickListener(v -> {
             Intent intent = new Intent(ReservedEventDetailsActivity.this, EventDetailsActivity.class);
-            intent.putExtra("event_day", eventDateDay.getText().toString());
-            intent.putExtra("event_month", eventDateMonth.getText().toString());
-            intent.putExtra("event_organizer", eventOrganizer.getText().toString());
-            intent.putExtra("event_title", eventTitle.getText().toString());
-            intent.putExtra("event_category", eventCategory.getText().toString());
-            intent.putExtra("event_date_full", eventDateFull.getText().toString());
-            intent.putExtra("event_time", eventTime.getText().toString());
-            intent.putExtra("event_location", eventLocation.getText().toString());
-            intent.putExtra("event_availability", "Reserved");
-            intent.putExtra("event_description", "This is your reserved event. More event details can be shown here later.");
+            intent.putExtra("event", event);
             startActivity(intent);
+            finish();
         });
 
         cancelReservationButton.setOnClickListener(v -> {
             Intent intent = new Intent(ReservedEventDetailsActivity.this, CancelReservationActivity.class);
+            intent.putExtra("event", event);
             startActivity(intent);
+            finish();
         });
     }
 

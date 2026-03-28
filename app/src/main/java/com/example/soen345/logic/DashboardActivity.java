@@ -23,7 +23,7 @@ public class DashboardActivity extends AppCompatActivity {
     private UserSearchEventService searchService;
     private TextView seeAllText, chipAll, chipConcerts, chipSports;
     private FrameLayout navManageEventsContainer;
-    private ImageView navTickets, navProfile, navHome, navManage;
+    private ImageView navTickets, navProfile, navHome, navManageEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class DashboardActivity extends AppCompatActivity {
         navHome = findViewById(R.id.navHome);
         navTickets = findViewById(R.id.navTickets);
         navProfile = findViewById(R.id.navProfile);
-        navManage = findViewById(R.id.navManageEvents);
+        navManageEvents = findViewById(R.id.navManageEvents);
         navManageEventsContainer = findViewById(R.id.navManageEventsContainer);
 
         // Hide managed if user is customer
@@ -133,15 +133,8 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupNavigation() {
         navHome.setOnClickListener(v -> loadDashboardData(null));
-
-        navTickets.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegisteredEventsActivity.class));
-        });
-        navManage.setOnClickListener(v->{
-            startActivity(new Intent(this, AdminManageEventsActivity.class));
-        });
-        navProfile.setOnClickListener(v -> {
-            // Example: startActivity(new Intent(this, ProfileActivity.class));
-        });
+        navTickets.setOnClickListener(v -> startActivity(new Intent(this, RegisteredEventsActivity.class)));
+        navManageEvents.setOnClickListener(v-> startActivity(new Intent(this, AdminManageEventsActivity.class)));
+        navProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
     }
 }

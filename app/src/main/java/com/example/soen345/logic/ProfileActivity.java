@@ -3,6 +3,8 @@ package com.example.soen345.logic;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import com.example.soen345.MainActivity;
 
 import com.example.soen345.R;
+import com.example.soen345.service.UserSession;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -17,6 +20,8 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView navTickets;
     private ImageView navProfile;
 
+    private ImageView navManageEvents;
+    private FrameLayout navManageEventsContainer;
     private CardView editProfileCard;
 
     
@@ -36,6 +41,16 @@ public class ProfileActivity extends AppCompatActivity {
         navHome = findViewById(R.id.navHome);
         navTickets = findViewById(R.id.navTickets);
         navProfile = findViewById(R.id.navProfile);
+
+        navManageEvents = findViewById(R.id.navManageEvents);
+        navManageEventsContainer = findViewById(R.id.navManageEventsContainer);
+
+        // Hide managed if user is customer
+        if ("customer".equals(UserSession.getInstance().getUser().role)) {
+            navManageEventsContainer.setVisibility(View.GONE);
+        } else {
+            navManageEventsContainer.setVisibility(View.VISIBLE);
+        }
 
         editProfileCard = findViewById(R.id.editProfileCard);
         logoutCard = findViewById(R.id.logoutCard);

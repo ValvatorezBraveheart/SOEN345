@@ -13,11 +13,7 @@ public class UserEventCancelService {
         this.reservationRef = db.collection("reservations");
     }
 
-    public void cancelReservation(String userId, String reservationId, CancelReservationCallback callback) {
-        if (userId == null || userId.isEmpty()) {
-            callback.onFailure(new IllegalArgumentException("Invalid userId"));
-            return;
-        }
+    public void cancelReservation(String reservationId, CancelReservationCallback callback) {
         if (reservationId == null || reservationId.isEmpty()) {
             callback.onFailure(new IllegalArgumentException("Invalid reservationId"));
             return;

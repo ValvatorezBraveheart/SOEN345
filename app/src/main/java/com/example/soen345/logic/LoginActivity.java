@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         signUpText.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
+            finish();
         });
 
         // Trigger Login Logic
@@ -58,16 +59,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                 UserSession session = UserSession.getInstance();
                 session.setUser(user);
-
-
-                // IMPORTANT: Move the navigation logic HERE
-                if ("admin".equals(user.role)) {
-                    Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
-                    finish(); // Prevents user from going back to login screen via back button
-                    return;
-                }
 
                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                 startActivity(intent);

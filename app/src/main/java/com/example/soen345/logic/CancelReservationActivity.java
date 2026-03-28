@@ -10,28 +10,33 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.soen345.Event;
 import com.example.soen345.R;
+import com.example.soen345.service.ReservationRepository;
+import com.example.soen345.service.UserEventCancelService;
+import com.example.soen345.service.UserSession;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class CancelReservationActivity extends AppCompatActivity {
 
     private ImageView backButton;
-
-    private TextView eventDateDay;
-    private TextView eventDateMonth;
     private TextView eventTitle;
     private TextView eventLocation;
-    private TextView reservationId;
 
     private AutoCompleteTextView cancelReasonAutoComplete;
 
     private MaterialButton confirmCancelButton;
     private MaterialButton keepReservationButton;
 
+    private Event event;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cancel_reservation);
+
+        event = getIntent().getParcelableExtra("event");
 
         initViews();
         loadReservationData();
@@ -42,13 +47,8 @@ public class CancelReservationActivity extends AppCompatActivity {
     private void initViews() {
         backButton = findViewById(R.id.backButton);
 
-        eventDateDay = findViewById(R.id.eventDateDay);
-        eventDateMonth = findViewById(R.id.eventDateMonth);
         eventTitle = findViewById(R.id.eventTitle);
         eventLocation = findViewById(R.id.eventLocation);
-        reservationId = findViewById(R.id.reservationId);
-
-
 
         cancelReasonAutoComplete = findViewById(R.id.cancelReasonAutoComplete);
 
@@ -57,28 +57,8 @@ public class CancelReservationActivity extends AppCompatActivity {
     }
 
     private void loadReservationData() {
-        Intent intent = getIntent();
-
-        String day = intent.getStringExtra("event_day");
-        String month = intent.getStringExtra("event_month");
-        String title = intent.getStringExtra("event_title");
-        String location = intent.getStringExtra("event_location");
-        String reservation = intent.getStringExtra("reservation_id");
-
-
-        if (day == null) day = "24";
-        if (month == null) month = "SEP";
-        if (title == null) title = "Summer Music Festival";
-        if (location == null) location = "Bell Centre, Montreal";
-        if (reservation == null) reservation = "Reservation ID: VELX-2026-00124";
-
-
-        eventDateDay.setText(day);
-        eventDateMonth.setText(month);
-        eventTitle.setText(title);
-        eventLocation.setText(location);
-        reservationId.setText(reservation);
-
+        eventTitle.setText(event.name);
+        eventLocation.setText(event.location);
     }
 
     private void setupReasonDropdown() {
@@ -113,13 +93,38 @@ public class CancelReservationActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please select a cancellation reason", Toast.LENGTH_SHORT).show();
                 return;
             }
+            String userId= UserSession.getInstance().getUser().userId;
+            UserEventCancelService service = new UserEventCancelService(FirebaseFirestore.getInstance());
+            ReservationRepository reservationRepository = new ReservationRepository(FirebaseFirestore.getInstance());
 
-            Toast.makeText(this, "Reservation cancelled successfully", Toast.LENGTH_SHORT).show();
+            reservationRepository.findReservationId(userId, event.eventId, new ReservationRepository.FindReservationCallback() {
+                @Override
+                public void onSuccess(String reservationId) {
+                    service.cancelReservation(reservationId, new UserEventCancelService.CancelReservationCallback() {
+                        @Override
+                        public void onSuccess() {
 
-            Intent intent = new Intent(CancelReservationActivity.this, RegisteredEventsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
+                            Toast.makeText(CancelReservationActivity.this, "Reservation cancelled successfully", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(CancelReservationActivity.this, RegisteredEventsActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+
+                            Toast.makeText(CancelReservationActivity.this, "Fail to cancel reservation", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                }
+            });
+
         });
     }
 }

@@ -68,7 +68,7 @@ public class AdminManageEventsActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
         navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(AdminManageEventsActivity.this, AdminDashboardActivity.class);
+            Intent intent = new Intent(AdminManageEventsActivity.this, DashboardActivity.class);
             startActivity(intent);
             finish();
         });
@@ -94,6 +94,7 @@ public class AdminManageEventsActivity extends AppCompatActivity {
         searchIcon.setOnClickListener(v -> {
             Intent intent = new Intent(AdminManageEventsActivity.this, SearchActivity.class);
             startActivity(intent);
+            finish();
         });
     }
 
