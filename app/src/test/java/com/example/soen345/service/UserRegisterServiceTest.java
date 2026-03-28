@@ -1,6 +1,5 @@
 package com.example.soen345.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -31,12 +30,15 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class UserRegisterServiceTest {
 
     @Mock FirebaseFirestore mockDb;
@@ -150,8 +152,17 @@ public class UserRegisterServiceTest {
             setupFirestoreQueries();
             setupTasksWhenAllSuccess(mockedTasks, false, false, false);
 
+            Task mockSetTask = mock(Task.class);
+            when(mockSetTask.addOnSuccessListener(any())).thenReturn(mockSetTask);
+            doAnswer(inv -> {
+                OnSuccessListener<Void> listener = inv.getArgument(0);
+                listener.onSuccess(null);
+                return mockSetTask;
+            }).when(mockSetTask).addOnSuccessListener(any());
+            when(mockSetTask.addOnFailureListener(any())).thenReturn(mockSetTask);
+
             when(mockUsersRef.document(user.userId)).thenReturn(mockDocRef);
-            when(mockDocRef.set(any())).thenReturn(mock(Task.class));
+            when(mockDocRef.set(any())).thenReturn(mockSetTask);
 
             UserRegisterService.UserRegisterCallback callback = mock(UserRegisterService.UserRegisterCallback.class);
             service.registerUser(user, callback);
