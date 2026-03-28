@@ -66,7 +66,6 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void loadEventData() {
-        // Retrieve the ID passed from AllEventsActivity
         String eventId = getIntent().getStringExtra("EVENT_ID");
 
         if (eventId == null || eventId.isEmpty()) {
@@ -75,22 +74,23 @@ public class EventDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        // Fetch dynamic data from Firebase via Repository
-        eventService.fetchEventById(eventId, new EventServiceInterface.EventDetailsCallback() {
-            @Override
-            public void onCallback(Event event) {
-                if (event != null) {
-                    populateUI(event);
-                } else {
-                    Toast.makeText(EventDetailsActivity.this, "Event not found in database", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(EventDetailsActivity.this, "Failed to load: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Direct fetch to keep it working without the deleted Repository
+        FirebaseFirestore.getInstance()
+                .collection("events")
+                .document(eventId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = documentSnapshot.toObject(Event.class);
+                    if (event != null) {
+                        event.eventId = documentSnapshot.getId();
+                        populateUI(event); // This calls your existing UI mapper
+                    } else {
+                        Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to load: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void populateUI(Event event) {

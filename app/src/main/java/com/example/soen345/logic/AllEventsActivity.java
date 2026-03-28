@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.soen345.Event;
 import com.example.soen345.R;
 import com.example.soen345.service.EventServiceInterface;
+import com.example.soen345.service.UserSearchEventService;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.List;
 public class AllEventsActivity extends AppCompatActivity {
 
     private ImageView navHome, navTickets, navProfile, searchIcon;
+
+    private UserSearchEventService searchService;
     private TextView chipAll, chipConcerts, chipSports, chipTravel, chipTheater;
 
     private RecyclerView rvEvents;
@@ -71,27 +74,21 @@ public class AllEventsActivity extends AppCompatActivity {
         rvEvents.setAdapter(adapter);
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        eventService = new EventRepository(firestore);
-    }
+//        eventService = new EventRepository(firestore);
+        searchService = new UserSearchEventService(firestore);    }
 
     private void loadEvents(String category) {
-        EventServiceInterface.EventCallback callback = new EventServiceInterface.EventCallback() {
-            @Override
-            public void onCallback(List<Event> list) {
-                adapter.updateData(list);
-            }
+        String filterCategory = category.equals("All") ? null : category;
 
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(AllEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        if (category.equals("All")) {
-            eventService.fetchAllEvents(callback);
-        } else {
-            eventService.fetchEventsByCategory(category, callback);
-        }
+        // Use the class-level searchService variable
+        searchService.getEvents(filterCategory, null, null,
+                list -> {
+                    adapter.updateData(list);
+                },
+                e -> {
+                    Toast.makeText(AllEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+        );
     }
 
     private void setupChipSelection() {

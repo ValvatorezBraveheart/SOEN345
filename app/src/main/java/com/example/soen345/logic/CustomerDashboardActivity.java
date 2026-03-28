@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.soen345.Event;
 import com.example.soen345.R;
 import com.example.soen345.service.EventServiceInterface;
+import com.example.soen345.service.UserSearchEventService;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
     private RecyclerView rvDashboardEvents;
     private EventAdapter adapter;
-    private EventServiceInterface eventService;
+    // Switch from Interface to the new Service
+    private UserSearchEventService searchService;
     private TextView seeAllText;
 
     @Override
@@ -27,8 +29,9 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_main);
 
+        // Initialize the new Service
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        eventService = new EventRepository(firestore);
+        searchService = new UserSearchEventService(firestore);
 
         initViews();
         setupRecyclerView();
@@ -39,7 +42,6 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         });
     }
 
-
     private void initViews() {
         rvDashboardEvents = findViewById(R.id.rvDashboardEvents);
         seeAllText = findViewById(R.id.seeAllText);
@@ -47,31 +49,23 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         rvDashboardEvents.setLayoutManager(new LinearLayoutManager(this));
-
-        // Use the same Adapter pattern to ensure consistency
         adapter = new EventAdapter(new ArrayList<>(), event -> {
             Intent intent = new Intent(this, EventDetailsActivity.class);
             intent.putExtra("EVENT_ID", event.eventId);
             startActivity(intent);
         });
-
         rvDashboardEvents.setAdapter(adapter);
     }
 
     private void loadDashboardData() {
-        eventService.fetchAllEvents(new EventServiceInterface.EventCallback() {
-            @Override
-            public void onCallback(List<Event> list) {
-                android.util.Log.d("DEBUG_DATA", "Events received: " + list.size());
-                if (list != null && !list.isEmpty()) {
-                    adapter.updateData(list);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(CustomerDashboardActivity.this, "Error syncing events", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Pass nulls to get all events (the "Dashboard" view)
+        searchService.getEvents(null, null, null,
+                list -> {
+                    if (list != null && !list.isEmpty()) {
+                        adapter.updateData(list);
+                    }
+                },
+                e -> Toast.makeText(this, "Error syncing events", Toast.LENGTH_SHORT).show()
+        );
     }
 }
