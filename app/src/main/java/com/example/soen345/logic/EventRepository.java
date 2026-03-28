@@ -1,6 +1,5 @@
 package com.example.soen345.logic;
 
-import android.util.Log;
 
 import com.example.soen345.Event;
 import com.example.soen345.service.EventServiceInterface;

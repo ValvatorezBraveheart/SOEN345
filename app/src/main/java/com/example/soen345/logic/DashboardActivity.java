@@ -2,6 +2,8 @@ package com.example.soen345.logic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -10,21 +12,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.soen345.R;
 import com.example.soen345.service.UserSearchEventService;
+import com.example.soen345.service.UserSession;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
-public class CustomerDashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
 
     private RecyclerView rvDashboardEvents;
     private EventAdapter adapter;
     private UserSearchEventService searchService;
     private TextView seeAllText, chipAll, chipConcerts, chipSports;
-    private ImageView navTickets, navProfile, navHome;
+    private FrameLayout navManageEventsContainer;
+    private ImageView navTickets, navProfile, navHome, navManage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_main);
+        setContentView(R.layout.activity_dashboard);
 
         // Initialize the new Service
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -52,6 +56,15 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         navHome = findViewById(R.id.navHome);
         navTickets = findViewById(R.id.navTickets);
         navProfile = findViewById(R.id.navProfile);
+        navManage = findViewById(R.id.navManageEvents);
+        navManageEventsContainer = findViewById(R.id.navManageEventsContainer);
+
+        // Hide managed if user is customer
+        if ("customer".equals(UserSession.getInstance().getUser().role)) {
+            navManageEventsContainer.setVisibility(View.GONE);
+        } else {
+            navManageEventsContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupRecyclerView() {
@@ -124,7 +137,9 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         navTickets.setOnClickListener(v -> {
             startActivity(new Intent(this, RegisteredEventsActivity.class));
         });
-
+        navManage.setOnClickListener(v->{
+            startActivity(new Intent(this, AdminManageEventsActivity.class));
+        });
         navProfile.setOnClickListener(v -> {
             // Example: startActivity(new Intent(this, ProfileActivity.class));
         });

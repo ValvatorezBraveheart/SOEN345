@@ -369,7 +369,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bottomNavCard"
-        android:layout_width="280dp"
+        android:layout_width="match_parent"
         android:layout_height="68dp"
         android:layout_marginBottom="20dp"
         app:cardCornerRadius="34dp"
@@ -383,7 +383,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="4"
             android:paddingStart="10dp"
             android:paddingEnd="10dp">
 
@@ -418,6 +417,7 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/navManageEventsContainer"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

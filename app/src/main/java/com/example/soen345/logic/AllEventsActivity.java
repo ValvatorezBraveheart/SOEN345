@@ -17,7 +17,6 @@ import com.example.soen345.service.UserSearchEventService;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AllEventsActivity extends AppCompatActivity {
 
@@ -74,7 +73,6 @@ public class AllEventsActivity extends AppCompatActivity {
         rvEvents.setAdapter(adapter);
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-//        eventService = new EventRepository(firestore);
         searchService = new UserSearchEventService(firestore);    }
 
     private void loadEvents(String category) {
@@ -117,7 +115,7 @@ public class AllEventsActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
         navHome.setOnClickListener(v -> {
-            startActivity(new Intent(this, CustomerDashboardActivity.class));
+            startActivity(new Intent(this, DashboardActivity.class));
             finish();
         });
         navTickets.setOnClickListener(v -> {

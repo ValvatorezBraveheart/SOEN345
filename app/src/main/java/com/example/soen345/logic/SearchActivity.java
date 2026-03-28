@@ -71,7 +71,7 @@ public class SearchActivity extends AppCompatActivity {
     private void setupBottomNavigation() {
         navHome.setOnClickListener(v -> {
 
-            startActivity(new Intent(SearchActivity.this, CustomerDashboardActivity.class));
+            startActivity(new Intent(SearchActivity.this, DashboardActivity.class));
             finish();
         });
 

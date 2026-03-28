@@ -43,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
         navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(ProfileActivity.this, CustomerDashboardActivity.class);
+            Intent intent = new Intent(ProfileActivity.this, DashboardActivity.class);
             startActivity(intent);
             finish();
         });

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".logic.CustomerDashboardActivity">
+    tools:context=".logic.DashboardActivity">
 
     <View
         android:layout_width="220dp"
@@ -141,7 +141,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bottomNavCard"
-        android:layout_width="260dp"
+        android:layout_width="match_parent"
         android:layout_height="68dp"
         android:layout_marginBottom="20dp"
         app:cardCornerRadius="34dp"
@@ -154,14 +154,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:orientation="horizontal">
             <FrameLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
                 <ImageView android:id="@+id/navHome" android:layout_width="44dp" android:layout_height="44dp" android:layout_gravity="center" android:background="@drawable/nav_selected_circle" android:padding="10dp" android:src="@drawable/ic_home"/>
             </FrameLayout>
             <FrameLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
                 <ImageView android:id="@+id/navTickets" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_registered_events"/>
             </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/navManageEventsContainer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:foregroundGravity="center">
+
+                <ImageView
+                    android:id="@+id/navManageEvents"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_manage_events"
+                    android:contentDescription="Manage Events"/>
+            </FrameLayout>
+
             <FrameLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
                 <ImageView android:id="@+id/navProfile" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_profile"/>
             </FrameLayout>
