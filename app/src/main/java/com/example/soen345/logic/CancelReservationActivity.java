@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.soen345.Event;
 import com.example.soen345.R;
+import com.example.soen345.User;
+import com.example.soen345.service.NotificationService;
 import com.example.soen345.service.ReservationRepository;
 import com.example.soen345.service.UserEventCancelService;
 import com.example.soen345.service.UserSession;
@@ -93,7 +95,7 @@ public class CancelReservationActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please select a cancellation reason", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String userId= UserSession.getInstance().getUser().userId;
+            String userId = UserSession.getInstance().getUser().userId;
             UserEventCancelService service = new UserEventCancelService(FirebaseFirestore.getInstance());
             ReservationRepository reservationRepository = new ReservationRepository(FirebaseFirestore.getInstance());
 
@@ -105,7 +107,7 @@ public class CancelReservationActivity extends AppCompatActivity {
                         public void onSuccess() {
 
                             Toast.makeText(CancelReservationActivity.this, "Reservation cancelled successfully", Toast.LENGTH_SHORT).show();
-
+                            sendNotification(event);
                             Intent intent = new Intent(CancelReservationActivity.this, RegisteredEventsActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             startActivity(intent);
@@ -126,5 +128,39 @@ public class CancelReservationActivity extends AppCompatActivity {
             });
 
         });
+    }
+
+    private void sendNotification(Event event) {
+        NotificationService service = new NotificationService();
+        User user = UserSession.getInstance().getUser();
+        String messageBody = "You canceled your reservation for " + event.name;
+        if (user.phone != null && !user.phone.isEmpty()) {
+            service.sendSmsMessage(user.phone, messageBody, new NotificationService.NotificationCallback() {
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(() -> Toast.makeText(CancelReservationActivity.this, "An sms confirmation message was sent", Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                    runOnUiThread(() -> Toast.makeText(CancelReservationActivity.this, "Error sending sms notification", Toast.LENGTH_SHORT).show());
+                }
+            });
+        }
+        if (user.email != null && !user.email.isEmpty()) {
+            service.sendEmail(user.email, "Reservation cancel confirmation", messageBody, new NotificationService.NotificationCallback() {
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(() -> Toast.makeText(CancelReservationActivity.this, "An email confirmation message was sent", Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    runOnUiThread(() -> Toast.makeText(CancelReservationActivity.this, "Error sending email notification", Toast.LENGTH_SHORT).show());
+                }
+            });
+
+        }
     }
 }

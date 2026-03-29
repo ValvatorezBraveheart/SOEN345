@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         service.loginUser(username, password, new UserLogInService.UserLogInCallback() {
             @Override
             public void onSuccess(User user) {
-                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show());
                 UserSession session = UserSession.getInstance();
                 session.setUser(user);
 
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }

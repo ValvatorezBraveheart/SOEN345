@@ -88,7 +88,7 @@ public class AllEventsActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Exception e) {
-                        Toast.makeText(AllEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> Toast.makeText(AllEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                     }
                 }
         );

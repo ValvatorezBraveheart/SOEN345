@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.soen345.Event;
 import com.example.soen345.R;
+import com.example.soen345.User;
+import com.example.soen345.service.NotificationService;
 import com.example.soen345.service.UserEventReserveService;
 import com.example.soen345.service.UserSession;
 import com.google.android.material.button.MaterialButton;
@@ -92,7 +94,6 @@ public class ReserveEventActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(v -> finish());
 
         confirmReservationButton.setOnClickListener(v -> {
-
             String ticketType = ticketTypeAutoComplete.getText().toString().trim();
 
             if (ticketType.isEmpty()) {
@@ -106,7 +107,8 @@ public class ReserveEventActivity extends AppCompatActivity {
             service.reserveEvent(userId, event.eventId, new UserEventReserveService.ReserveEventCallback() {
                 @Override
                 public void onSuccess(String reservationId) {
-                    Toast.makeText(ReserveEventActivity.this, "Reservation confirmed", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(ReserveEventActivity.this, "Reservation confirmed", Toast.LENGTH_SHORT).show());
+                    sendNotification(event);
                     Intent intent = new Intent(ReserveEventActivity.this, RegisteredEventsActivity.class);
                     startActivity(intent);
                     finish();
@@ -114,10 +116,43 @@ public class ReserveEventActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(ReserveEventActivity.this, "Reservation failed, try again", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(ReserveEventActivity.this, "Reservation failed, try again", Toast.LENGTH_SHORT).show());
                 }
             });
 
         });
+    }
+
+    private void sendNotification(Event event) {
+        NotificationService service = new NotificationService();
+        User user = UserSession.getInstance().getUser();
+        String messageBody = "You reserved a spot for " + event.name;
+        if (user.phone != null && !user.phone.isEmpty()) {
+            service.sendSmsMessage(user.phone, messageBody, new NotificationService.NotificationCallback() {
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(() -> Toast.makeText(ReserveEventActivity.this, "An sms confirmation message was sent", Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    runOnUiThread(() -> Toast.makeText(ReserveEventActivity.this, "Error sending sms notification", Toast.LENGTH_SHORT).show());
+                }
+            });
+        }
+
+        if (user.email != null && !user.email.isEmpty()) {
+            service.sendEmail(user.email, "Event reservation confirmation", messageBody, new NotificationService.NotificationCallback() {
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(() -> Toast.makeText(ReserveEventActivity.this, "An email confirmation message was sent", Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    runOnUiThread(() -> Toast.makeText(ReserveEventActivity.this, "Error sending email notification", Toast.LENGTH_SHORT).show());
+                }
+            });
+        }
     }
 }

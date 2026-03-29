@@ -201,7 +201,7 @@ public class AdminAddEventActivity extends AppCompatActivity {
             service.addEvent(newEvent, new AdminAddEventService.AddEventCallback() {
                 @Override
                 public void onSuccess() {
-                    Toast.makeText(AdminAddEventActivity.this, "Event published successfully", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(AdminAddEventActivity.this, "Event published successfully", Toast.LENGTH_SHORT).show());
                     Intent intent = new Intent(AdminAddEventActivity.this, AdminManageEventsActivity.class);
                     startActivity(intent);
                     finish();
@@ -210,7 +210,7 @@ public class AdminAddEventActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Exception e) {
 
-                    Toast.makeText(AdminAddEventActivity.this, "Failed to publish event, try again", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(AdminAddEventActivity.this, "Failed to publish event, try again", Toast.LENGTH_SHORT).show());
                 }
             });
 

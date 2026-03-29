@@ -120,7 +120,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Exception e) {
-                        Toast.makeText(DashboardActivity.this, "Error syncing events", Toast.LENGTH_SHORT).show();
+                        runOnUiThread(() -> Toast.makeText(DashboardActivity.this, "Error syncing events", Toast.LENGTH_SHORT).show());
                     }
                 }
         );

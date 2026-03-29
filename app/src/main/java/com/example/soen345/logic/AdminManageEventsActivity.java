@@ -150,7 +150,7 @@ public class AdminManageEventsActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(AdminManageEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(AdminManageEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }

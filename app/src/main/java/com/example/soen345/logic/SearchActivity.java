@@ -197,7 +197,6 @@ public class SearchActivity extends AppCompatActivity {
         rvEvents.setAdapter(adapter);
 
         eventRepository = new EventRepository(FirebaseFirestore.getInstance());
-        loadEvents();
     }
 
     private void loadEvents() {
@@ -211,7 +210,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(SearchActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(SearchActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             }
         );

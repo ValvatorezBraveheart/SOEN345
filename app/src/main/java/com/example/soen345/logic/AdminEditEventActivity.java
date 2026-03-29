@@ -212,7 +212,7 @@ public class AdminEditEventActivity extends AppCompatActivity {
             service.cancelEvent(currentEvent.eventId, new AdminCancelEventService.CancelEventCallback() {
                 @Override
                 public void onSuccess() {
-                    Toast.makeText(AdminEditEventActivity.this, "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(AdminEditEventActivity.this, "Event deleted successfully", Toast.LENGTH_SHORT).show());
                     Intent intent = new Intent(AdminEditEventActivity.this, AdminManageEventsActivity.class);
                     startActivity(intent);
                     finish();
@@ -220,7 +220,7 @@ public class AdminEditEventActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(AdminEditEventActivity.this, "Failed to delete event, try again", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(AdminEditEventActivity.this, "Failed to delete event, try again", Toast.LENGTH_SHORT).show());
                 }
             });
         });
