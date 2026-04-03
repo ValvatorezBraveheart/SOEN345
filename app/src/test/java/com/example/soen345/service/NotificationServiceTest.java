@@ -19,7 +19,8 @@ public class NotificationServiceTest {
 
     @Mock
     private NotificationService.SmsSender mockSmsSender;
-    @Mock private NotificationService.NotificationCallback mockCallback;
+    @Mock
+    private NotificationService.NotificationCallback mockCallback;
     private final String fakePhoneNumber = "+1234567890";
 
     private NotificationService service;

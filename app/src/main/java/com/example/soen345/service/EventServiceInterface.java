@@ -15,4 +15,6 @@ public interface EventServiceInterface {
     void fetchAllEvents(EventCallback callback);
     void fetchEventById(String eventId, EventDetailsCallback callback);
     void fetchEventsByCategory(String category, EventCallback callback);
+    void fetchEventsCreatedByUser(String userId, EventCallback callback);
+    void fetchEventsReservedByUser(String userId, EventCallback callback);
 }

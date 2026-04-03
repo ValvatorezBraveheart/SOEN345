@@ -1,6 +1,5 @@
 package com.example.soen345.logic;
 
-import android.util.Log;
 
 import com.example.soen345.Event;
 import com.example.soen345.service.EventServiceInterface;
@@ -69,6 +68,65 @@ public class EventRepository implements EventServiceInterface {
                             eventList.add(event);
                         }
                         callback.onCallback(eventList);
+                    } else {
+                        callback.onError(task.getException());
+                    }
+                });
+    }
+    @Override
+    public void fetchEventsCreatedByUser(String userId, EventCallback callback) {
+        db.collection("events")
+                .whereEqualTo("adminId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<Event> eventList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Event event = document.toObject(Event.class);
+                            event.eventId = document.getId();
+                            eventList.add(event);
+                        }
+                        callback.onCallback(eventList);
+                    } else {
+                        callback.onError(task.getException());
+                    }
+                });
+    }
+    @Override
+    public void fetchEventsReservedByUser(String userId, EventCallback callback) {
+        db.collection("reservations")
+                .whereEqualTo("userId", userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<String> eventIds = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String eventId = document.getString("eventId");
+                            if (eventId != null) eventIds.add(eventId);
+                        }
+
+                        if (eventIds.isEmpty()) {
+                            callback.onCallback(new ArrayList<>());
+                            return;
+                        }
+
+                        // Fetch all events by their IDs
+                        db.collection("events")
+                                .whereIn("__name__", eventIds)
+                                .get()
+                                .addOnCompleteListener(eventTask -> {
+                                    if (eventTask.isSuccessful()) {
+                                        List<Event> eventList = new ArrayList<>();
+                                        for (QueryDocumentSnapshot document : eventTask.getResult()) {
+                                            Event event = document.toObject(Event.class);
+                                            event.eventId = document.getId();
+                                            eventList.add(event);
+                                        }
+                                        callback.onCallback(eventList);
+                                    } else {
+                                        callback.onError(eventTask.getException());
+                                    }
+                                });
                     } else {
                         callback.onError(task.getException());
                     }

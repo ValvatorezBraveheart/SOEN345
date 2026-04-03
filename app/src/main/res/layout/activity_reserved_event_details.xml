@@ -100,31 +100,7 @@
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="68dp"
-                            android:layout_height="68dp"
-                            android:background="@drawable/date_circle_dark"
-                            android:gravity="center"
-                            android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/eventDateDay"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="24"
-                                android:textColor="#FFFFFF"
-                                android:textSize="22sp"
-                                android:textStyle="bold"/>
-
-                            <TextView
-                                android:id="@+id/eventDateMonth"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="SEP"
-                                android:textColor="#EEF1FF"
-                                android:textSize="12sp"
-                                android:textStyle="bold"/>
-                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="0dp"

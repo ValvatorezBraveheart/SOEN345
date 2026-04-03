@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".logic.LoginActivity" android:exported="false" />
         <activity android:name=".logic.RegisterActivity" android:exported="false" />
-        <activity android:name=".logic.CustomerDashboardActivity" />
+        <activity android:name=".logic.DashboardActivity" />
         <activity android:name=".logic.RegisteredEventsActivity" />
         <activity android:name=".logic.ProfileActivity" />
         <activity android:name=".logic.SearchActivity" />
@@ -33,8 +33,9 @@
         <activity android:name=".logic.CancelReservationActivity" />
         <activity android:name=".logic.ReserveEventActivity" />
         <activity android:name=".logic.EditProfileActivity" />
-        <activity android:name=".logic.PaymentMethodsActivity" />
-        <activity android:name=".logic.AddNewCardActivity" />
+        <activity android:name=".logic.AdminAddEventActivity" />
+        <activity android:name=".logic.AdminEditEventActivity" />
+        <activity android:name=".logic.AdminManageEventsActivity" />
     </application>
 
 </manifest>

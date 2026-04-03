@@ -86,14 +86,6 @@
                     android:orientation="vertical"
                     android:padding="24dp">
 
-                    <ImageView
-                        android:id="@+id/profileAvatar"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:background="@drawable/profile_circle_bg"
-                        android:contentDescription="Profile Avatar"
-                        android:padding="18dp"
-                        android:src="@drawable/ic_profile" />
 
                     <TextView
                         android:id="@+id/profileName"
@@ -131,85 +123,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Stats -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:orientation="horizontal">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="12"
-                            android:textColor="#4A5AE8"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Events Joined"
-                            android:textColor="#777777"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="0dp"
-                    android:layout_height="110dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="4dp"
-                    app:cardPreventCornerOverlap="true"
-                    app:cardUseCompatPadding="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3"
-                            android:textColor="#4A5AE8"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:text="Upcoming"
-                            android:textColor="#777777"
-                            android:textSize="13sp" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </LinearLayout>
 
             <!-- Options -->
             <TextView
@@ -314,7 +227,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/bottomNavCard"
-        android:layout_width="260dp"
+        android:layout_width="match_parent"
         android:layout_height="68dp"
         android:layout_marginBottom="20dp"
         app:cardCornerRadius="34dp"
@@ -328,7 +241,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="4"
             android:paddingStart="10dp"
             android:paddingEnd="10dp">
 
@@ -363,6 +275,7 @@
             </FrameLayout>
 
             <FrameLayout
+                android:id="@+id/navManageEventsContainer"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

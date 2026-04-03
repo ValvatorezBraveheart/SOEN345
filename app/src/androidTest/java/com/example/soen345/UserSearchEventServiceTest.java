@@ -18,6 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -70,11 +71,18 @@ public class UserSearchEventServiceTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         service.getEvents(null, null, null,
-                events -> {
-                    assertEquals(3, events.size());
-                    latch.countDown();
-                },
-                e -> fail("Should not fail: " + e.getMessage())
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+                        assertEquals(3, events.size());
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        fail("Should not fail: " + e.getMessage());
+                    }
+                }
         );
 
         if (!latch.await(5, TimeUnit.SECONDS)) fail("Callback not called in time");
@@ -87,12 +95,20 @@ public class UserSearchEventServiceTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         service.getEvents("Music", null, null,
-                events -> {
-                    assertEquals(2, events.size());
-                    assertTrue(events.stream().allMatch(e -> e.category.equals("Music")));
-                    latch.countDown();
-                },
-                e -> fail("Should not fail: " + e.getMessage())
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+
+                        assertEquals(2, events.size());
+                        assertTrue(events.stream().allMatch(e -> e.category.equals("Music")));
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        fail("Should not fail: " + e.getMessage());
+                    }
+                }
         );
 
         if (!latch.await(5, TimeUnit.SECONDS)) fail("Callback not called in time");
@@ -103,12 +119,20 @@ public class UserSearchEventServiceTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         service.getEvents(null, "Toronto", null,
-                events -> {
-                    assertEquals(2, events.size());
-                    assertTrue(events.stream().allMatch(e -> e.location.equals("Toronto")));
-                    latch.countDown();
-                },
-                e -> fail("Should not fail: " + e.getMessage())
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+
+                        assertEquals(2, events.size());
+                        assertTrue(events.stream().allMatch(e -> e.location.equals("Toronto")));
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        fail("Should not fail: " + e.getMessage());
+                    }
+                }
         );
 
         if (!latch.await(5, TimeUnit.SECONDS)) fail("Callback not called in time");
@@ -119,12 +143,19 @@ public class UserSearchEventServiceTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         service.getEvents(null, null, "2026-03-21",
-                events -> {
-                    assertEquals(2, events.size());
-                    assertTrue(events.stream().allMatch(e -> e.date.equals("2026-03-21")));
-                    latch.countDown();
-                },
-                e -> fail("Should not fail: " + e.getMessage())
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+                        assertEquals(2, events.size());
+                        assertTrue(events.stream().allMatch(e -> e.date.equals("2026-03-21")));
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        fail("Should not fail: " + e.getMessage());
+                    }
+                }
         );
 
         if (!latch.await(5, TimeUnit.SECONDS)) fail("Callback not called in time");
@@ -137,12 +168,20 @@ public class UserSearchEventServiceTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         service.getEvents("Music", "Toronto", null,
-                events -> {
-                    assertEquals(1, events.size());
-                    assertEquals(eventId3, events.get(0).eventId);
-                    latch.countDown();
-                },
-                e -> fail("Should not fail: " + e.getMessage())
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+
+                        assertEquals(1, events.size());
+                        assertEquals(eventId3, events.get(0).eventId);
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        fail("Should not fail: " + e.getMessage());
+                    }
+                }
         );
 
         if (!latch.await(5, TimeUnit.SECONDS)) fail("Callback not called in time");
@@ -153,12 +192,20 @@ public class UserSearchEventServiceTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         service.getEvents("Music", "Montreal", "2026-03-21",
-                events -> {
-                    assertEquals(1, events.size());
-                    assertEquals(eventId1, events.get(0).eventId);
-                    latch.countDown();
-                },
-                e -> fail("Should not fail: " + e.getMessage())
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+
+                        assertEquals(1, events.size());
+                        assertEquals(eventId1, events.get(0).eventId);
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        fail("Should not fail: " + e.getMessage());
+                    }
+                }
         );
 
         if (!latch.await(5, TimeUnit.SECONDS)) fail("Callback not called in time");
@@ -171,11 +218,19 @@ public class UserSearchEventServiceTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         service.getEvents("DoesNotExist", "NOwhere", "1888-11-11",
-                events -> {
-                    assertTrue(events.isEmpty());
-                    latch.countDown();
-                },
-                e -> fail("Should not fail: " + e.getMessage())
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+
+                        assertTrue(events.isEmpty());
+                        latch.countDown();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        fail("Should not fail: " + e.getMessage());
+                    }
+                }
         );
 
         if (!latch.await(5, TimeUnit.SECONDS)) fail("Callback not called in time");

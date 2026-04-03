@@ -2,29 +2,36 @@ package com.example.soen345.logic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.soen345.Event;
 import com.example.soen345.R;
 import com.example.soen345.service.UserSearchEventService;
+import com.example.soen345.service.UserSession;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
+import java.util.List;
 
-public class CustomerDashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
 
     private RecyclerView rvDashboardEvents;
     private EventAdapter adapter;
     private UserSearchEventService searchService;
-    private TextView seeAllText, chipAll, chipConcerts, chipSports;
-    private ImageView navTickets, navProfile, navHome;
+    private TextView seeAllText, chipAll, chipConcerts, chipSports, chipTheaters;
+    private FrameLayout navManageEventsContainer;
+    private ImageView navTickets, navProfile, navHome, navManageEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_main);
+        setContentView(R.layout.activity_dashboard);
 
         // Initialize the new Service
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -47,11 +54,21 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         chipAll = findViewById(R.id.chipAll);
         chipConcerts = findViewById(R.id.chipConcerts);
         chipSports = findViewById(R.id.chipSports);
+        chipTheaters = findViewById(R.id.chipTheaters);
 
         // Navigation Icons
         navHome = findViewById(R.id.navHome);
         navTickets = findViewById(R.id.navTickets);
         navProfile = findViewById(R.id.navProfile);
+        navManageEvents = findViewById(R.id.navManageEvents);
+        navManageEventsContainer = findViewById(R.id.navManageEventsContainer);
+
+        // Hide managed if user is customer
+        if ("customer".equals(UserSession.getInstance().getUser().role)) {
+            navManageEventsContainer.setVisibility(View.GONE);
+        } else {
+            navManageEventsContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupRecyclerView() {
@@ -59,7 +76,7 @@ public class CustomerDashboardActivity extends AppCompatActivity {
         adapter = new EventAdapter(new ArrayList<>(), event -> {
             Intent intent = new Intent(this, EventDetailsActivity.class);
             // This eventId is now automatically pulled via @DocumentId in your Event class
-            intent.putExtra("EVENT_ID", event.eventId);
+            intent.putExtra("event", event);
             startActivity(intent);
         });
         rvDashboardEvents.setAdapter(adapter);
@@ -93,12 +110,19 @@ public class CustomerDashboardActivity extends AppCompatActivity {
     private void loadDashboardData(String category) {
         // Pass the category to the service to filter the list dynamically
         searchService.getEvents(category, null, null,
-                list -> {
-                    if (list != null) {
-                        adapter.updateData(list);
+                new UserSearchEventService.EventSearchCallback() {
+                    @Override
+                    public void onSuccess(List<Event> events) {
+                        if (events != null) {
+                            adapter.updateData(events);
+                        }
                     }
-                },
-                e -> Toast.makeText(this, "Error syncing events", Toast.LENGTH_SHORT).show()
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        runOnUiThread(() -> Toast.makeText(DashboardActivity.this, "Error syncing events", Toast.LENGTH_SHORT).show());
+                    }
+                }
         );
     }
 
@@ -120,13 +144,8 @@ public class CustomerDashboardActivity extends AppCompatActivity {
 
     private void setupNavigation() {
         navHome.setOnClickListener(v -> loadDashboardData(null));
-
-        navTickets.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegisteredEventsActivity.class));
-        });
-
-        navProfile.setOnClickListener(v -> {
-            // Example: startActivity(new Intent(this, ProfileActivity.class));
-        });
+        navTickets.setOnClickListener(v -> startActivity(new Intent(this, RegisteredEventsActivity.class)));
+        navManageEvents.setOnClickListener(v-> startActivity(new Intent(this, AdminManageEventsActivity.class)));
+        navProfile.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
     }
 }

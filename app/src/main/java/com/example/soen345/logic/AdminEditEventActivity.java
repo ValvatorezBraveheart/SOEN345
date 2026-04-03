@@ -2,6 +2,7 @@ package com.example.soen345.logic;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -11,16 +12,22 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.soen345.Event;
 import com.example.soen345.R;
+import com.example.soen345.service.AdminCancelEventService;
+import com.example.soen345.service.AdminEditEventService;
+import com.example.soen345.service.UserSession;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
-public class AddEventActivity extends AppCompatActivity {
+public class AdminEditEventActivity extends AppCompatActivity {
+    private Event currentEvent;
 
     private ImageView backButton;
-
     private EditText eventTitleEditText;
     private EditText eventOrganizerEditText;
     private AutoCompleteTextView categoryAutoComplete;
@@ -29,13 +36,16 @@ public class AddEventActivity extends AppCompatActivity {
     private EditText eventLocationEditText;
     private EditText eventDescriptionEditText;
 
-    private MaterialButton publishEventButton;
+    private MaterialButton updateEventButton;
+
+    private MaterialButton cancelEventButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_event);
+        setContentView(R.layout.activity_edit_event);
 
+        currentEvent = getIntent().getParcelableExtra("event");
         initViews();
         setupCategoryDropdown();
         setupDatePicker();
@@ -47,15 +57,28 @@ public class AddEventActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
 
         eventTitleEditText = findViewById(R.id.eventTitleEditText);
+        eventTitleEditText.setText(currentEvent.name);
+
         eventOrganizerEditText = findViewById(R.id.eventOrganizerEditText);
+        eventOrganizerEditText.setText(currentEvent.adminId);
+
         categoryAutoComplete = findViewById(R.id.categoryAutoComplete);
+        categoryAutoComplete.setText(currentEvent.category);
+
         eventDateEditText = findViewById(R.id.eventDateEditText);
+        eventDateEditText.setText(currentEvent.date);
+
         eventTimeEditText = findViewById(R.id.eventTimeEditText);
+        eventTimeEditText.setText(currentEvent.startTime);
+
         eventLocationEditText = findViewById(R.id.eventLocationEditText);
+        eventLocationEditText.setText(currentEvent.location);
+
         eventDescriptionEditText = findViewById(R.id.eventDescriptionEditText);
+        eventDescriptionEditText.setText(currentEvent.description);
 
-        publishEventButton = findViewById(R.id.publishEventButton);
-
+        updateEventButton = findViewById(R.id.updateEventButton);
+        cancelEventButton = findViewById(R.id.cancelEventButton);
     }
 
     private void setupCategoryDropdown() {
@@ -84,7 +107,7 @@ public class AddEventActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    AddEventActivity.this,
+                    AdminEditEventActivity.this,
                     (view, year, month, dayOfMonth) -> {
                         String formattedDate = String.format(
                                 Locale.getDefault(),
@@ -109,7 +132,7 @@ public class AddEventActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
 
             TimePickerDialog timePickerDialog = new TimePickerDialog(
-                    AddEventActivity.this,
+                    AdminEditEventActivity.this,
                     (view, hourOfDay, minute) -> {
                         String amPm = (hourOfDay >= 12) ? "PM" : "AM";
                         int formattedHour = hourOfDay % 12;
@@ -138,7 +161,7 @@ public class AddEventActivity extends AppCompatActivity {
     private void setupActions() {
         backButton.setOnClickListener(v -> finish());
 
-        publishEventButton.setOnClickListener(v -> {
+        updateEventButton.setOnClickListener(v -> {
             String title = eventTitleEditText.getText().toString().trim();
             String organizer = eventOrganizerEditText.getText().toString().trim();
             String category = categoryAutoComplete.getText().toString().trim();
@@ -159,9 +182,47 @@ public class AddEventActivity extends AppCompatActivity {
                 return;
             }
 
-            Toast.makeText(this, "Event published successfully", Toast.LENGTH_SHORT).show();
+            String userId = UserSession.getInstance().getUser().userId;
+            Event newEvent = new Event(currentEvent.eventId ,title,date, time, time, location,category,description, userId);
+            AdminEditEventService service = new AdminEditEventService(FirebaseFirestore.getInstance());
+            service.editEvent(newEvent, new AdminEditEventService.EditEventCallback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(AdminEditEventActivity.this, "Event published successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(AdminEditEventActivity.this, AdminManageEventsActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Toast.makeText(AdminEditEventActivity.this, "Failed to publish event, try again", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            Toast.makeText(this, "Event updated successfully", Toast.LENGTH_SHORT).show();
             finish();
         });
 
+
+
+        cancelEventButton.setOnClickListener(v->{
+
+            AdminCancelEventService service = new AdminCancelEventService(FirebaseFirestore.getInstance());
+            service.cancelEvent(currentEvent.eventId, new AdminCancelEventService.CancelEventCallback() {
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(() -> Toast.makeText(AdminEditEventActivity.this, "Event deleted successfully", Toast.LENGTH_SHORT).show());
+                    Intent intent = new Intent(AdminEditEventActivity.this, AdminManageEventsActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    runOnUiThread(() -> Toast.makeText(AdminEditEventActivity.this, "Failed to delete event, try again", Toast.LENGTH_SHORT).show());
+                }
+            });
+        });
     }
 }

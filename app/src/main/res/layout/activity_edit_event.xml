@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".logic.EditEventActivity">
+    tools:context=".logic.AdminEditEventActivity">
 
     <View
         android:layout_width="220dp"
@@ -223,9 +223,17 @@
                 android:backgroundTint="#4A5AE8"
                 app:cornerRadius="18dp"/>
 
-
-
-
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelEventButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="28dp"
+                android:text="Cancel Event"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:backgroundTint="#D64D4D"
+                app:cornerRadius="18dp"/>
         </LinearLayout>
     </ScrollView>
 

@@ -30,13 +30,16 @@ class UserSearchEventServiceTest {
 
     @Mock
     private FirebaseFirestore mockDb;
-    @Mock private CollectionReference mockEventsRef;
-    @Mock private Query mockQuery;
-    @Mock private Task<QuerySnapshot> mockTask;
-    @Mock private QuerySnapshot mockSnapshot;
-
-    @Mock private OnSuccessListener<List<Event>> mockOnSuccess;
-    @Mock private OnFailureListener mockOnFailure;
+    @Mock
+    private CollectionReference mockEventsRef;
+    @Mock
+    private Query mockQuery;
+    @Mock
+    private Task<QuerySnapshot> mockTask;
+    @Mock
+    private QuerySnapshot mockSnapshot;
+    @Mock
+    private UserSearchEventService.EventSearchCallback callback;
 
     private UserSearchEventService service;
 
@@ -53,7 +56,7 @@ class UserSearchEventServiceTest {
         when(mockTask.addOnSuccessListener(any())).thenReturn(mockTask);
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
 
-        service.getEvents(null, null, null, mockOnSuccess, mockOnFailure);
+        service.getEvents(null, null, null, callback);
 
         verify(mockEventsRef).get();
         verify(mockEventsRef, never()).whereEqualTo(eq("category"), any());
@@ -69,7 +72,7 @@ class UserSearchEventServiceTest {
         when(mockTask.addOnSuccessListener(any())).thenReturn(mockTask);
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
 
-        service.getEvents("Music", null, null, mockOnSuccess, mockOnFailure);
+        service.getEvents("Music", null, null, callback);
 
         verify(mockEventsRef).whereEqualTo("category", "Music");
         verify(mockQuery, never()).whereEqualTo(eq("location"), any());
@@ -83,7 +86,7 @@ class UserSearchEventServiceTest {
         when(mockTask.addOnSuccessListener(any())).thenReturn(mockTask);
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
 
-        service.getEvents(null, "Montreal", null, mockOnSuccess, mockOnFailure);
+        service.getEvents(null, "Montreal", null, callback);
 
         verify(mockEventsRef).whereEqualTo("location", "Montreal");
     }
@@ -95,7 +98,7 @@ class UserSearchEventServiceTest {
         when(mockTask.addOnSuccessListener(any())).thenReturn(mockTask);
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
 
-        service.getEvents(null, null, "2026-03-21", mockOnSuccess, mockOnFailure);
+        service.getEvents(null, null, "2026-03-21", callback);
 
         verify(mockEventsRef).whereEqualTo("date", "2026-03-21");
     }
@@ -109,7 +112,7 @@ class UserSearchEventServiceTest {
         when(mockTask.addOnSuccessListener(any())).thenReturn(mockTask);
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
 
-        service.getEvents("Music", "Montreal", "2026-03-21", mockOnSuccess, mockOnFailure);
+        service.getEvents("Music", "Montreal", "2026-03-21", callback);
 
         verify(mockEventsRef).whereEqualTo("category", "Music");
         verify(mockQuery).whereEqualTo("location", "Montreal");
@@ -129,9 +132,9 @@ class UserSearchEventServiceTest {
         });
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
 
-        service.getEvents(null, null, null, mockOnSuccess, mockOnFailure);
+        service.getEvents(null, null, null, callback);
 
-        verify(mockOnSuccess).onSuccess(fakeEvents);
+        verify(callback).onSuccess(fakeEvents);
     }
     // Fail
     @Test
@@ -146,8 +149,8 @@ class UserSearchEventServiceTest {
             return mockTask;
         });
 
-        service.getEvents(null, null, null, mockOnSuccess, mockOnFailure);
+        service.getEvents(null, null, null, callback);
 
-        verify(mockOnFailure).onFailure(fakeException);
+        verify(callback).onFailure(fakeException);
     }
 }

@@ -2,20 +2,39 @@ package com.example.soen345.logic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.soen345.Event;
 import com.example.soen345.R;
+import com.example.soen345.service.EventServiceInterface;
+import com.example.soen345.service.UserSession;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisteredEventsActivity extends AppCompatActivity {
 
     private ImageView navHome;
     private ImageView navRegisteredEvents;
     private ImageView navProfile;
+    private ImageView navManageEvents;
     private ImageView filterIcon;
-    private CardView upcomingEventCard1;
-    private CardView upcomingEventCard2;
+    private FrameLayout navManageEventsContainer;
+
+    private RecyclerView rvEvents;
+    // FIXED: Use the standalone EventAdapter, not the one inside ReservedEventDetailsActivity
+    private EventAdapter adapter;
+    private EventRepository eventRepository;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,29 +43,43 @@ public class RegisteredEventsActivity extends AppCompatActivity {
         initViews();
         setupBottomNavigation();
         setupTopActions();
-        setupEventCardActions();
+        setupRecyclerView();
     }
 
     private void initViews() {
         navHome = findViewById(R.id.navHome);
         navRegisteredEvents = findViewById(R.id.navRegisteredEvents);
+        navManageEvents = findViewById(R.id.navManageEvents);
+        navManageEventsContainer = findViewById(R.id.navManageEventsContainer);
+
+        if ("customer".equals(UserSession.getInstance().getUser().role)) {
+            navManageEventsContainer.setVisibility(View.GONE);
+        } else {
+            navManageEventsContainer.setVisibility(View.VISIBLE);
+        }
+
+
         navProfile = findViewById(R.id.navProfile);
         filterIcon = findViewById(R.id.filterIcon);
 
-        upcomingEventCard1 = findViewById(R.id.upcomingEventCard1);
-        upcomingEventCard2 = findViewById(R.id.upcomingEventCard2);
 
+        rvEvents = findViewById(R.id.rvEvents);
     }
 
     private void setupBottomNavigation() {
         navHome.setOnClickListener(v -> {
-            Intent intent = new Intent(RegisteredEventsActivity.this, CustomerDashboardActivity.class);
+            Intent intent = new Intent(RegisteredEventsActivity.this, DashboardActivity.class);
             startActivity(intent);
             finish();
         });
 
         navRegisteredEvents.setOnClickListener(v -> {
             // Already on this page
+        });
+        navManageEvents.setOnClickListener(v->{
+            Intent intent = new Intent(RegisteredEventsActivity.this, AdminManageEventsActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         navProfile.setOnClickListener(v -> {
@@ -63,39 +96,35 @@ public class RegisteredEventsActivity extends AppCompatActivity {
         });
     }
 
-    private void setupEventCardActions() {
-        upcomingEventCard1.setOnClickListener(v -> {
+    public void setupRecyclerView(){
+
+        rvEvents.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new EventAdapter(new ArrayList<>(), event -> {
             Intent intent = new Intent(RegisteredEventsActivity.this, ReservedEventDetailsActivity.class);
-            intent.putExtra("event_day", "24");
-            intent.putExtra("event_month", "SEP");
-            intent.putExtra("event_title", "Summer Music Festival");
-            intent.putExtra("event_organizer", "Velox Productions");
-            intent.putExtra("ticket_status", "Reserved");
-            intent.putExtra("event_date_full", "24 Sept 2026");
-            intent.putExtra("event_time", "7:00 PM");
-            intent.putExtra("event_location", "Bell Centre, Montreal");
-            intent.putExtra("event_category", "Concerts");
-            intent.putExtra("reservation_id", "VELX-2026-00124");
-            intent.putExtra("seat_info", "Section A • Seat 14");
+            intent.putExtra("event", event);
             startActivity(intent);
         });
 
-        upcomingEventCard2.setOnClickListener(v -> {
-            Intent intent = new Intent(RegisteredEventsActivity.this, ReservedEventDetailsActivity.class);
-            intent.putExtra("event_day", "29");
-            intent.putExtra("event_month", "SEP");
-            intent.putExtra("event_title", "Spring Art Showcase");
-            intent.putExtra("event_organizer", "Visionary Arts Group");
-            intent.putExtra("ticket_status", "Reserved");
-            intent.putExtra("event_date_full", "29 Sept 2026");
-            intent.putExtra("event_time", "3:30 PM");
-            intent.putExtra("event_location", "Place des Arts, Montreal");
-            intent.putExtra("event_category", "Theater");
-            intent.putExtra("reservation_id", "VELX-2026-00129");
-            intent.putExtra("seat_info", "Section B • Seat 08");
-            startActivity(intent);
+        rvEvents.setAdapter(adapter);
+
+        eventRepository = new EventRepository(FirebaseFirestore.getInstance());
+        loadEvents();
+    }
+
+    private void loadEvents() {
+        String userId = UserSession.getInstance().getUser().userId;
+
+        eventRepository.fetchEventsReservedByUser(userId, new EventServiceInterface.EventCallback() {
+            @Override
+            public void onCallback(List<Event> events) {
+                adapter.updateData(events);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(() -> Toast.makeText(RegisteredEventsActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
         });
-
-
     }
 }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".logic.DeleteEventActivity">
+    tools:context=".logic.AdminDeleteEventActivity">
 
     <View
         android:layout_width="220dp"
@@ -243,7 +243,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="28dp"
-                android:text="Confirm Delete"
+                android:text="Delete"
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:textSize="16sp"

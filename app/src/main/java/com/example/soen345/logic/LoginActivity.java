@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.soen345.R;
 import com.example.soen345.User;
 import com.example.soen345.service.UserLogInService;
+import com.example.soen345.service.UserSession;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         signUpText.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
+            finish();
         });
 
         // Trigger Login Logic
@@ -54,17 +56,18 @@ public class LoginActivity extends AppCompatActivity {
         service.loginUser(username, password, new UserLogInService.UserLogInCallback() {
             @Override
             public void onSuccess(User user) {
-                Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_SHORT).show());
+                UserSession session = UserSession.getInstance();
+                session.setUser(user);
 
-                // IMPORTANT: Move the navigation logic HERE
-                Intent intent = new Intent(LoginActivity.this, CustomerDashboardActivity.class);
+                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                 startActivity(intent);
                 finish(); // Prevents user from going back to login screen via back button
             }
 
             @Override
             public void onFailure(Exception e) {
-                Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }

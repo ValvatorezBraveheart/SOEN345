@@ -18,9 +18,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private ImageView backButton;
     private ImageView shareButton;
-
-    private TextView eventDateDay;
-    private TextView eventDateMonth;
     private TextView eventOrganizer;
     private TextView eventTitle;
     private TextView eventCategory;
@@ -30,6 +27,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private TextView eventDescription;
 
     private MaterialButton reserveButton;
+    private Event event;
 
     // SOLID: Using the Interface, not the concrete implementation directly where possible
     private EventServiceInterface eventService;
@@ -42,6 +40,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         // Dependency Injection (Manual)
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         eventService = new EventRepository(firestore);
+        event = getIntent().getParcelableExtra("event");
 
         initViews();
         loadEventData();
@@ -52,8 +51,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         shareButton = findViewById(R.id.shareButton);
 
-        eventDateDay = findViewById(R.id.eventDateDay);
-        eventDateMonth = findViewById(R.id.eventDateMonth);
         eventOrganizer = findViewById(R.id.eventOrganizer);
         eventTitle = findViewById(R.id.eventTitle);
         eventCategory = findViewById(R.id.eventCategory);
@@ -66,31 +63,12 @@ public class EventDetailsActivity extends AppCompatActivity {
     }
 
     private void loadEventData() {
-        String eventId = getIntent().getStringExtra("EVENT_ID");
-
-        if (eventId == null || eventId.isEmpty()) {
-            Toast.makeText(this, "Error: Event ID missing", Toast.LENGTH_SHORT).show();
+        if (event == null) {
+            Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
-
-        // Direct fetch to keep it working without the deleted Repository
-        FirebaseFirestore.getInstance()
-                .collection("events")
-                .document(eventId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    Event event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        event.eventId = documentSnapshot.getId();
-                        populateUI(event); // This calls your existing UI mapper
-                    } else {
-                        Toast.makeText(this, "Event not found", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to load: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        populateUI(event);
     }
 
     private void populateUI(Event event) {
@@ -110,8 +88,6 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         if (event.date != null) {
             eventDateFull.setText(event.date);
-
-            eventDateDay.setText(event.date.split(" ")[0]); // Optional: just takes "22"
         }
     }
 
@@ -132,14 +108,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         reserveButton.setOnClickListener(v -> {
             // Pass the EVENT_ID to the next activity so it remains dynamic
             Intent intent = new Intent(EventDetailsActivity.this, ReserveEventActivity.class);
-            intent.putExtra("EVENT_ID", getIntent().getStringExtra("EVENT_ID"));
-
-            // Also passing display strings for immediate UI feedback in ReserveEventActivity
-            intent.putExtra("event_title", eventTitle.getText().toString());
-            intent.putExtra("event_location", eventLocation.getText().toString());
-            intent.putExtra("event_time", eventTime.getText().toString());
-
+            intent.putExtra("event", event);
             startActivity(intent);
+            finish();
         });
     }
 }

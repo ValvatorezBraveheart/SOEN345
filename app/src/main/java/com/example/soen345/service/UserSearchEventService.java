@@ -18,19 +18,23 @@ public class UserSearchEventService {
         this.eventsRef = db.collection("events");
     }
 
-    public void getEvents(String category, String location, String date,
-                          OnSuccessListener<List<Event>> onSuccess, OnFailureListener onFailure) {
+    public void getEvents(String category, String location, String date, EventSearchCallback callback) {
         Query query = eventsRef;
 
-        if (category != null) query = query.whereEqualTo("category", category);
-        if (location != null) query = query.whereEqualTo("location", location);
-        if (date != null)     query = query.whereEqualTo("date", date);
+        if (category != null && !category.isEmpty()) query = query.whereEqualTo("category", category);
+        if (location != null && !location.isEmpty()) query = query.whereEqualTo("location", location);
+        if (date != null && !date.isEmpty())     query = query.whereEqualTo("date", date);
 
         query.get()
                 .addOnSuccessListener(snapshot -> {
                     List<Event> events = snapshot.toObjects(Event.class);
-                    onSuccess.onSuccess(events);
+                    callback.onSuccess(events);
                 })
-                .addOnFailureListener(onFailure);
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    public interface EventSearchCallback{
+        void onSuccess(List<Event> events);
+        void onFailure(Exception e);
     }
 }

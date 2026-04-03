@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
         userRegisterService.registerUser(user, new UserRegisterService.UserRegisterCallback() {
             @Override
             public void onSuccess() {
-                Toast.makeText(RegisterActivity.this,"Register user successfully",Toast.LENGTH_SHORT).show();
+                runOnUiThread(() -> Toast.makeText(RegisterActivity.this,"Register user successfully",Toast.LENGTH_SHORT).show());
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -96,7 +96,8 @@ public class RegisterActivity extends AppCompatActivity {
                 if (message == null || message.isEmpty()) {
                     message = "An error occurred"; // default fallback
                 }
-                Toast.makeText(RegisterActivity.this, message,Toast.LENGTH_SHORT).show();
+                String finalMessage = message;
+                runOnUiThread(() -> Toast.makeText(RegisterActivity.this, finalMessage,Toast.LENGTH_SHORT).show());
             }
         });
     }

@@ -100,32 +100,6 @@
                     android:padding="18dp">
 
                     <LinearLayout
-                        android:layout_width="68dp"
-                        android:layout_height="68dp"
-                        android:background="@drawable/date_circle_dark"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/eventDateDay"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="24"
-                            android:textColor="#FFFFFF"
-                            android:textSize="22sp"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:id="@+id/eventDateMonth"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="SEP"
-                            android:textColor="#EEF1FF"
-                            android:textSize="12sp"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="14dp"
@@ -141,6 +115,7 @@
                             android:textSize="18sp"
                             android:textStyle="bold"/>
 
+
                         <TextView
                             android:id="@+id/eventLocation"
                             android:layout_width="wrap_content"
@@ -149,7 +124,14 @@
                             android:text="Bell Centre, Montreal"
                             android:textColor="#888888"
                             android:textSize="14sp"/>
-
+                        <TextView
+                            android:id="@+id/eventDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="12 December 2222"
+                            android:textColor="#888888"
+                            android:textSize="14sp"/>
                         <TextView
                             android:id="@+id/eventTime"
                             android:layout_width="wrap_content"
