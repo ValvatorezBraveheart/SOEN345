@@ -25,6 +25,7 @@ public class DashboardActivity extends AppCompatActivity {
     private EventAdapter adapter;
     private UserSearchEventService searchService;
     private TextView seeAllText, chipAll, chipConcerts, chipSports, chipTheaters;
+    private ImageView searchIcon;
     private FrameLayout navManageEventsContainer;
     private ImageView navTickets, navProfile, navHome, navManageEvents;
 
@@ -41,6 +42,7 @@ public class DashboardActivity extends AppCompatActivity {
         setupRecyclerView();
         setupFilters();
         setupNavigation();
+        setUpSearchIcon();
 
         // Initial Load: Fetch all events for the dashboard
         loadDashboardData(null);
@@ -63,12 +65,18 @@ public class DashboardActivity extends AppCompatActivity {
         navManageEvents = findViewById(R.id.navManageEvents);
         navManageEventsContainer = findViewById(R.id.navManageEventsContainer);
 
+        searchIcon = findViewById(R.id.searchIcon);
+
         // Hide managed if user is customer
         if ("customer".equals(UserSession.getInstance().getUser().role)) {
             navManageEventsContainer.setVisibility(View.GONE);
         } else {
             navManageEventsContainer.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setUpSearchIcon(){
+        searchIcon.setOnClickListener(view -> startActivity(new Intent(DashboardActivity.this, SearchActivity.class)));
     }
 
     private void setupRecyclerView() {
@@ -84,9 +92,7 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupFilters() {
         // "See All" takes you to the AllEventsActivity
-        seeAllText.setOnClickListener(v -> {
-            startActivity(new Intent(this, AllEventsActivity.class));
-        });
+        seeAllText.setOnClickListener(v -> startActivity(new Intent(this, AllEventsActivity.class)));
 
         // Chip: All
         chipAll.setOnClickListener(v -> {
@@ -105,6 +111,12 @@ public class DashboardActivity extends AppCompatActivity {
             updateChipUI(chipSports);
             loadDashboardData("Sports");
         });
+
+        chipTheaters.setOnClickListener(v->{
+            updateChipUI(chipTheaters);
+            loadDashboardData("Theaters");
+        });
+
     }
 
     private void loadDashboardData(String category) {

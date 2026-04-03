@@ -66,38 +66,6 @@
                 android:textColor="#888888"
                 android:textSize="15sp" />
 
-            <LinearLayout
-                android:id="@+id/searchBarContainer"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/input_field"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp">
-
-                <ImageView
-                    android:id="@+id/searchPageIcon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/ic_search_bold"
-                    android:contentDescription="Search" />
-
-                <EditText
-                    android:id="@+id/searchEditText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:background="@android:color/transparent"
-                    android:hint="Search events"
-                    android:inputType="text"
-                    android:textColor="#1E1E1E"
-                    android:textColorHint="#999999"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -222,6 +190,13 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#101A63"
+                android:text="Search"/>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
