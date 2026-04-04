@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,12 +34,9 @@ public class SearchActivity extends AppCompatActivity {
     private ImageView navHome;
     private ImageView navTickets;
     private ImageView navProfile;
-    private ImageView searchButton;
 
-    private EditText searchEditText;
     private EditText locationEditText;
 
-    private CardView dateFilterCard;
     private CardView locationInputCard;
 
     private TextView dateFilterText;
@@ -47,8 +45,8 @@ public class SearchActivity extends AppCompatActivity {
     private TextView chipConcertsSearch;
     private TextView chipSportsSearch;
     private TextView chipTheaterSearch;
+    private Button searchButton;
 
-    private EventRepository eventRepository;
     private RecyclerView rvEvents;
     private EventAdapter adapter;
 
@@ -66,18 +64,19 @@ public class SearchActivity extends AppCompatActivity {
         setupChipSelection();
         setupFilterActions();
         setupRecyclerView();
+        setUpSearchButton();
+
+        performSearch(); // Perform search once to initialize the list of event
     }
 
     private void initViews() {
         navHome = findViewById(R.id.navHome);
         navTickets = findViewById(R.id.navTickets);
         navProfile = findViewById(R.id.navProfile);
-        searchButton = findViewById(R.id.searchPageIcon);
+        searchButton = findViewById(R.id.btn_search);
 
-        searchEditText = findViewById(R.id.searchEditText);
         locationEditText = findViewById(R.id.locationEditText);
 
-        dateFilterCard = findViewById(R.id.dateFilterCard);
         locationInputCard = findViewById(R.id.locationInputCard);
 
         dateFilterText = findViewById(R.id.dateFilterText);
@@ -89,6 +88,11 @@ public class SearchActivity extends AppCompatActivity {
         rvEvents = findViewById(R.id.rvEvents);
 
     }
+
+    private void setUpSearchButton(){
+        searchButton.setOnClickListener(view -> performSearch());
+    }
+
 
     private void setupBottomNavigation() {
         navHome.setOnClickListener(v -> {
@@ -123,6 +127,7 @@ public class SearchActivity extends AppCompatActivity {
 
         selectedChip.setBackgroundResource(R.drawable.chip_selected_bg);
         selectedChip.setTextColor(getResources().getColor(android.R.color.white));
+        performSearch();
     }
 
     private void resetChip(TextView chip) {
@@ -174,12 +179,12 @@ public class SearchActivity extends AppCompatActivity {
                                 year
                         );
                         dateFilterText.setText(formattedDate);
+                        date = formattedDate;
                     },
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH)
             );
-
             datePickerDialog.show();
         });
     }
@@ -196,13 +201,15 @@ public class SearchActivity extends AppCompatActivity {
 
         rvEvents.setAdapter(adapter);
 
-        eventRepository = new EventRepository(FirebaseFirestore.getInstance());
     }
 
     private void loadEvents() {
         UserSearchEventService service = new UserSearchEventService(FirebaseFirestore.getInstance());
-
-        service.getEvents(category, location, date, new UserSearchEventService.EventSearchCallback() {
+        String dateSearchTerm = date;
+        if (date.equals("Any day")){
+            dateSearchTerm = null;
+        }
+        service.getEvents(category, location, dateSearchTerm, new UserSearchEventService.EventSearchCallback() {
                 @Override
                 public void onSuccess(List<Event> events) {
                     adapter.updateData(events);
