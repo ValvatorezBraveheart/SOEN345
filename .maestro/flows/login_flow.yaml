@@ -1,0 +1,23 @@
+appId: com.example.soen345
+---
+- launchApp
+
+# Open login page from main screen
+- tapOn:
+    id: "loginMainButton"
+
+# Fill login form
+- tapOn:
+    id: "loginUsername"
+- inputText: "sara"
+
+- tapOn:
+    id: "loginPassword"
+- inputText: "123456"
+
+# Submit login
+- tapOn:
+    id: "loginButton"
+
+# Verify dashboard opened
+- assertVisible: "Find your next event."

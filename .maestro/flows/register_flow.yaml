@@ -1,0 +1,45 @@
+appId: com.example.soen345
+---
+- launchApp
+
+- tapOn:
+    id: "signupMainButton"
+
+- tapOn:
+    id: "fullName"
+- inputText: "Sarah Johnson"
+
+- tapOn:
+    id: "email"
+- inputText: "sarah@email.com"
+
+- tapOn:
+    id: "phone"
+- inputText: "5145551234"
+
+- tapOn:
+    id: "username"
+- inputText: "sarahj"
+
+- tapOn:
+    id: "password"
+- inputText: "123456"
+
+- scrollUntilVisible:
+    element:
+      id: "roleAutoComplete"
+    direction: DOWN
+
+- tapOn:
+    id: "roleAutoComplete"
+
+- assertVisible:
+    text: "Customer"
+
+- tapOn:
+    text: "Customer"
+
+- tapOn:
+    id: "signupButton"
+
+- assertVisible: "Login"

@@ -1,0 +1,40 @@
+appId: com.example.soen345
+---
+- launchApp
+
+# Go to login page
+- tapOn:
+    id: "loginMainButton"
+
+# Login
+- tapOn:
+    id: "loginEmail"
+- inputText: "sara"
+
+- tapOn:
+    id: "loginPassword"
+- inputText: "123456"
+
+- tapOn:
+    id: "loginButton"
+
+# Open search screen
+- tapOn:
+    id: "searchIcon"
+
+# Verify search page opened
+- assertVisible:
+    id: "searchEditText"
+
+# Enter search term
+- tapOn:
+    id: "searchEditText"
+- inputText: "Music"
+
+# Open first search result
+- tapOn:
+    id: "searchResultCard1"
+
+# Verify event details page opened
+- assertVisible:
+    id: "eventTitle"
