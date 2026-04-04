@@ -50,9 +50,9 @@ jobs:
           path: ~/.cache/firebase/emulators
           key: ${{ runner.os }}-firebase-emulators-${{ hashFiles('firebase.json') }}
 
+      # Unit tests use Mockito mocks — no Firebase emulator needed
       - name: Run Unit Tests
-        run: |
-          firebase emulators:exec --project soen345project "./gradlew test"
+        run: ./gradlew test
 
       - name: Enable KVM for Android Emulator
         run: |
@@ -60,13 +60,19 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
+      # Start Firebase emulator as a background process before the Android emulator boots
+      - name: Start Firebase Emulator
+        run: |
+          firebase emulators:start --only firestore --project soen345project &
+          sleep 15
+
       - name: Run Integration Tests (Instrumented)
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
           target: google_apis
           arch: x86_64
-          script: firebase emulators:exec --project soen345project "./gradlew connectedDebugAndroidTest"
+          script: ./gradlew connectedDebugAndroidTest
 
       - name: Publish Test Results
         if: always()
@@ -77,3 +83,4 @@ jobs:
             app/build/test-results/**/*.xml
             app/build/outputs/androidTest-results/connected/**/*.xml
           reporter: java-junit
+          fail-on-error: false
