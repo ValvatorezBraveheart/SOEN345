@@ -11,6 +11,9 @@ This project is a professional ticket booking solution for events such as movies
 | Bhaskar Das | 40325270 |
 | Bhumika Bhumika | 40223877 |
 
+## Documentation
+The complete project report, including requirements analysis, system design, test plans, and results, is hosted in the project Wiki.
+
 ## Core Features
 * **User Authentication**: Secure registration and login using email or phone numbers via Firebase Auth.
 * **Event Discovery**: Real-time browsing of available events with multi-criteria filtering (Date, Location, Category).
@@ -31,8 +34,6 @@ To ensure high software quality and maintain a stable `main` branch, this projec
 2. Executes all Unit and Instrumented tests.
 3. Reports status checks to prevent merging failing code.
 
-## Documentation
-The complete project report, including requirements analysis, system design, test plans, and results, is hosted in the project Wiki.
 
 **[Project Index / Home](https://github.com/ValvatorezBraveheart/SOEN345/wiki)**
 
