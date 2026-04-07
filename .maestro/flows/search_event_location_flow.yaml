@@ -8,7 +8,7 @@ appId: com.example.soen345
 
 # Login
 - tapOn:
-    id: "loginEmail"
+    id: "loginUsername"
 - inputText: "sara"
 
 - tapOn:
@@ -24,17 +24,26 @@ appId: com.example.soen345
 
 # Verify search page opened
 - assertVisible:
-    id: "searchEditText"
+    id: "locationInputCard"
 
 # Enter search term
 - tapOn:
-    id: "searchEditText"
-- inputText: "Music"
+    id: "locationEditText"
+- inputText: "Yeeeeee"
 
 # Open first search result
 - tapOn:
-    id: "searchResultCard1"
+    id: "btn_search"
 
 # Verify event details page opened
 - assertVisible:
-    id: "eventTitle"
+    id: "rvEvents"
+
+- tapOn:
+    id: "rvEvents"
+
+- tapOn:
+    id: "backButton"
+
+- tapOn:
+    id:  "navHome"

@@ -1,0 +1,39 @@
+appId: com.example.soen345
+---
+- launchApp
+
+# Go to login page
+- tapOn:
+    id: "loginMainButton"
+
+# Login
+- tapOn:
+    id: "loginUsername"
+- inputText: "bhumi"
+
+- tapOn:
+    id: "loginPassword"
+- inputText: "1234567"
+
+- tapOn:
+    id: "loginButton"
+
+- tapOn:
+    id: "navManageEvents"
+
+# Verify search page opened
+- assertVisible: "Manage Events"
+
+#assertVisible:
+- assertVisible:
+    id: "rvEvents"
+
+- tapOn:
+    id: "rvEvents"
+
+- assertVisible: "Update event details"
+
+- tapOn:
+    id: "cancelEventButton"
+
+- assertVisible: "Manage Events"
