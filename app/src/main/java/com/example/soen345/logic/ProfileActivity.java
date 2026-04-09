@@ -6,13 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import com.example.soen345.MainActivity;
 
 import com.example.soen345.R;
+import com.example.soen345.User;
+import com.example.soen345.service.UserDeleteAccountService;
 import com.example.soen345.service.UserSession;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -23,6 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView navManageEvents;
     private FrameLayout navManageEventsContainer;
     private CardView editProfileCard;
+    private CardView deleteAccountCard;
 
     
     private CardView logoutCard;
@@ -54,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         editProfileCard = findViewById(R.id.editProfileCard);
         logoutCard = findViewById(R.id.logoutCard);
+        deleteAccountCard = findViewById(R.id.deleteAccountCard);
     }
 
     private void setupBottomNavigation() {
@@ -81,14 +87,32 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-
-
-
         logoutCard.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+        });
+
+        deleteAccountCard.setOnClickListener( v->{
+            UserDeleteAccountService service = new UserDeleteAccountService(FirebaseFirestore.getInstance());
+            User user = UserSession.getInstance().getUser();
+            service.deleteUser(user.userId, new UserDeleteAccountService.UserDeleteCallback() {
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(() -> Toast.makeText(ProfileActivity.this,"Successfully delete your account",Toast.LENGTH_SHORT).show());
+                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    runOnUiThread(() -> Toast.makeText(ProfileActivity.this,"Unable to delete your account",Toast.LENGTH_SHORT).show());
+
+                }
+            });
         });
     }
 }
