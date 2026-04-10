@@ -1,0 +1,49 @@
+appId: com.example.soen345
+---
+- launchApp
+
+# Go to login page
+- tapOn:
+    id: "loginMainButton"
+
+# Login
+- tapOn:
+    id: "loginUsername"
+- inputText: "sara"
+
+- tapOn:
+    id: "loginPassword"
+- inputText: "123456"
+
+- tapOn:
+    id: "loginButton"
+
+# Open search screen
+- tapOn:
+    id: "searchIcon"
+
+# Verify search page opened
+- assertVisible:
+    id: "locationInputCard"
+
+# Enter search term
+- tapOn:
+    id: "locationEditText"
+- inputText: "Yeeeeee"
+
+# Open first search result
+- tapOn:
+    id: "btn_search"
+
+# Verify event details page opened
+- assertVisible:
+    id: "rvEvents"
+
+- tapOn:
+    id: "rvEvents"
+
+- tapOn:
+    id: "backButton"
+
+- tapOn:
+    id:  "navHome"
