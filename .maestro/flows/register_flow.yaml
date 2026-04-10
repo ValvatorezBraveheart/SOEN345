@@ -7,19 +7,19 @@ appId: com.example.soen345
 
 - tapOn:
     id: "fullName"
-- inputText: "Sarah Johnson"
+- inputText: "Jackson Smith"
 
 - tapOn:
     id: "email"
-- inputText: "sarah@email.com"
+- inputText: "jackson@email.com"
 
 - tapOn:
     id: "phone"
-- inputText: "5145551234"
+- inputText: "5145551238"
 
 - tapOn:
     id: "username"
-- inputText: "sarahj"
+- inputText: "jack"
 
 - tapOn:
     id: "password"
@@ -43,3 +43,24 @@ appId: com.example.soen345
     id: "signupButton"
 
 - assertVisible: "Login"
+
+- tapOn:
+    id: "loginUsername"
+- inputText: "jack"
+
+- tapOn:
+    id: "loginPassword"
+- inputText: "123456"
+
+# Submit login
+- tapOn:
+    id: "loginButton"
+
+# Verify dashboard opened
+- assertVisible: "Find your next event."
+
+- tapOn:
+    id: "navProfile"
+
+- tapOn:
+    id: "deleteAccountCard"
