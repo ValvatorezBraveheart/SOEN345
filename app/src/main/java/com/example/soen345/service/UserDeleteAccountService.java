@@ -17,7 +17,6 @@ public class UserDeleteAccountService {
 
     public void deleteUser(String userId,UserDeleteCallback callback) {
         if (userId == null || userId.isEmpty()) {
-            Log.i("UserDeleteAccountService", "Missing userId");
             callback.onFailure(new IllegalArgumentException("Invalid input: userId is required"));
             return;
         }
