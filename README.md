@@ -37,9 +37,20 @@ To ensure high software quality and maintain a stable `main` branch, this projec
 
 **[Project Index / Home](https://github.com/ValvatorezBraveheart/SOEN345/wiki)**
 
+## Prerequisite
+1. A Firebase project setup
+2. Twilio account set up with a source phone number
+3. Gmail app's password
+
 
 ## Installation & Setup
 1. Clone the repository: `git clone https://github.com/YourRepo/SOEN345.git`
 2. Open the project in **Android Studio**.
 3. Ensure the `google-services.json` file is present in the `app/` directory.
-4. Sync Gradle and run the application on an emulator or physical device.
+4. Setup `local.properties`:
+  - Add `TWILIO_ACCOUNT_SID=YOUR_TWILIO_ACCOUNT_SID`
+  - Add `TWILIO_AUTH_TOKEN=YOUR_TWILIO_AUTH_TOKEN`
+  - Add `TWILIO_SRC_PHONE=YOUR_TWILIO_SRC_PHONE`
+  - Add `GMAIL_EMAIL=YOUR_GMAIL_EMAIL`
+  - Add `GMAIL_APP_PASSWORD=YOUR_GMAIL_APP_PASSWORD`
+5. Sync Gradle and run the application on an emulator or physical device.
