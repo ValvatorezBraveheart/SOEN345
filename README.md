@@ -44,7 +44,7 @@ To ensure high software quality and maintain a stable `main` branch, this projec
 
 
 ## Installation & Setup
-1. Clone the repository: `git clone https://github.com/YourRepo/SOEN345.git`
+1. Clone the repository: `git clone https://github.com/ValvatorezBraveheart/SOEN345.git`
 2. Open the project in **Android Studio**.
 3. Ensure the `google-services.json` file is present in the `app/` directory.
 4. Setup `local.properties`:
